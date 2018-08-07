@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single"
+
+        >
+        <item
+            android:id="@+id/nav_yahoo"
+            android:iconTint="@color/colorButtonIcon"
+            android:title="Nuestro Servidor-Yahoo Weather" />
+        <item
+            android:id="@+id/nav_open"
+            android:iconTint="@color/colorButtonIcon"
+            android:title="OpenWeather" />
+        <item
+            android:id="@+id/nav_dark"
+            android:title="DarkSky"
+            android:iconTint="@color/colorButtonIcon"
+            android:visible="true"
+            />
+        <item
+            android:id="@+id/nav_accu"
+            android:iconTint="@color/colorButtonIcon"
+            android:enabled="false"
+            android:title="AccuWeather" />
+        <item
+            android:id="@+id/nav_apixu"
+            android:enabled="false"
+            android:iconTint="@color/colorButtonIcon"
+            android:title="APIXU" />
+
+
+    </group>
+    <item
+        android:id="@+id/exit"
+        android:checkableBehavior="single"
+        android:enabled="false"
+        android:title=""></item>
+
+</menu>

@@ -1,0 +1,82 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ProgressBar
+        android:id="@+id/dark_progress"
+        android:layout_width="40dp"
+        android:layout_gravity="center"
+        android:layout_height="40dp" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/news_nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/dark_fragment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/current_dark_weather_frame_layout"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:paddingBottom="0dp"
+                android:paddingStart="1dp"
+                android:paddingEnd="1dp"
+                android:paddingTop="1dp">
+
+                <ImageView
+                    android:id="@+id/current_dark_weather_img_view"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/art_clear"
+                    android:layout_height="wrap_content"
+
+                    />
+
+                <TextView
+                    android:id="@+id/current_dark_weather_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:maxLines="3"
+                    android:ellipsize="end"
+                    android:text="LLUVIA COMENZANDO ESTA NOCHE"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/first_notice_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:background="@color/colorBlack"
+                    android:padding="10dp"
+                    android:text="14/09/2017"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold" />
+
+            </FrameLayout>
+
+            <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/news_recycle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                tools:listitem="@layout/item_darkskyweather">
+
+            </android.support.v7.widget.RecyclerView>
+
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+</FrameLayout>

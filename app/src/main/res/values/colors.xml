@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#3266FF</color>
+
+
+    <color name="colorButtonIcon">#FEB81E</color>
+    <color name="colorButtonLogin">#FEB81E</color>
+    <color name="colorButtonSignUp">#50336B</color>
+    <color name="colorButtonNoAuth">#FEB81E</color>
+    <color name="colorBarExit">#FEB81E</color>
+    <color name="colorAppBar">#2D77FF</color>
+    <color name="colorButtonGray">#BCBCBC</color>
+    <color name="colorBluePen">#1FB6EE</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorBlackTransparent">#48000000</color>
+    <color name="colorBackgroundLoginField">#EDEDED</color>
+    <color name="colorBackgroundTextField">#ABABAB</color>
+    <color name="grayStrong">#4C4C4C</color>
+
+
+
+</resources>
