@@ -139,7 +139,8 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         queueAccuWeather = Volley.newRequestQueue(getActivity());
-        presenter.callAccuWeatherCurrent(queueAccuWeather);
+//        presenter.callAccuWeatherCurrent(queueAccuWeather);
+        presenter.callAccuWeather(queueAccuWeather);
     }
 
     @Override
@@ -389,12 +390,12 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
 
     @Override
     public void getCurrentTemp(String response) {
-        JsonParser parser = new JsonParser();
-        JsonArray json = (JsonArray) parser.parse(response);
-        JsonElement temp = json.get(0).getAsJsonObject().get("Temperature").getAsJsonObject().get("Metric").getAsJsonObject().get("Value");
-
-        currentTemp = temp.getAsInt();
-        presenter.callAccuWeather(queueAccuWeather);
+//        JsonParser parser = new JsonParser();
+//        JsonArray json = (JsonArray) parser.parse(response);
+//        JsonElement temp = json.get(0).getAsJsonObject().get("Temperature").getAsJsonObject().get("Metric").getAsJsonObject().get("Value");
+//
+//        currentTemp = temp.getAsInt();
+//        presenter.callAccuWeather(queueAccuWeather);
     }
 
 

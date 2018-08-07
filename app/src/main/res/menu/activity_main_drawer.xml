@@ -26,7 +26,7 @@
             android:title="AccuWeather" />
         <item
             android:id="@+id/nav_apixu"
-            android:enabled="false"
+            android:enabled="true"
             android:iconTint="@color/colorButtonIcon"
             android:title="APIXU" />
 

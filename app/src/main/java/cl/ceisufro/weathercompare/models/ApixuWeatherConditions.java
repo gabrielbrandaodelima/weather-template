@@ -4,17 +4,17 @@ import java.util.Date;
 
 import io.realm.RealmObject;
 
-public class APIXUWeatherConditions extends RealmObject {
+public class ApixuWeatherConditions extends RealmObject {
     private Date id;
     private String date;
     private int currentTemp;
     private int tempMax;
     private int tempMin;
 
-    public APIXUWeatherConditions() {
+    public ApixuWeatherConditions() {
     }
 
-    public APIXUWeatherConditions(Date id, String date, int currentTemp, int tempMax, int tempMin) {
+    public ApixuWeatherConditions(Date id, String date, int currentTemp, int tempMax, int tempMin) {
         this.id = id;
         this.date = date;
         this.currentTemp = currentTemp;
