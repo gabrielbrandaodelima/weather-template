@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
 import cl.ceisufro.weathercompare.models.ApixuWeatherConditions;
+import cl.ceisufro.weathercompare.utils.Utils;
 
 public class ApixuWeatherAdapter extends RecyclerView.Adapter<ApixuWeatherAdapter.ViewHolder> {
 
@@ -127,99 +128,108 @@ public class ApixuWeatherAdapter extends RecyclerView.Adapter<ApixuWeatherAdapte
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final ApixuWeatherConditions apixuWeatherConditions = apixuWeatherConditionsList.get(position);
-//        int dateInTimestamp = apixuWeatherConditions.getDate();
-//        String date = Utils.getDateString(dateInTimestamp);
-//        holder.listItemDateTextview.setText(date);
-//        holder.listItemForecastTextview.setText(apixuWeatherConditions.getDayPhrase());
+        int dateInTimestamp = apixuWeatherConditions.getDate();
+        String date = Utils.getDateString(dateInTimestamp);
+        holder.listItemDateTextview.setText(date);
+        holder.listItemForecastTextview.setText(apixuWeatherConditions.getConditionText());
         holder.listItemHighTextview.setText(Math.round(apixuWeatherConditions.getTempMax()) + "ºC");
         holder.listItemLowTextview.setText(Math.round(apixuWeatherConditions.getTempMin()) + "ºC");
-//        switch (apixuWeatherConditions.getDayPhrase()) {
-//            case "Sunny":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
-//
-//                break;
-//            case "Clear":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
-//
-//                break;
-//            case "Mostly clear":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
-//
-//                break;
-//            case "Mostly sunny":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
-//
-//                break;
-//            case "Partly sunny":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
-//
-//                break;
-//            case "Intermittent clouds":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
-//
-//                break;
-//            case "Hazy sunshine":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
-//
-//                break;
-//            case "Mostly cloudy":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
-//
-//                break;
-//            case "Cloudy":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_cloudy);
-//
-//                break;
-//            case "Few clouds":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
-//
-//                break;
-//            case "Snow":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_snow);
-//
-//                break;
-//            case "Mostly cloudy w/ snow":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_snow);
-//
-//                break;
-//            case "Fog":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_fog);
-//
-//                break;
-//            case "T-Storms":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_storm);
-//
-//                break;
-//            case "Mostly cloudy w/ T-Storms":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_storm);
-//
-//                break;
-//            case "Partly sunny w/ T-Storms":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_storm);
-//
-//                break;
-//            case "Mostly cloudy w/ Showers":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
-//
-//                break;
-//
-//            case "Partly sunny w/ Showers":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
-//                break;
-//
-//            case "Scattered showers":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
-//                break;
-//            case "Showers":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_rain);
-//                break;
-//            case "Rain":
-//                holder.listItemIcon.setImageResource(R.drawable.ic_rain);
-//                break;
-//            default:
-//                break;
-//
-//        }
+        switch (apixuWeatherConditions.getConditionText()) {
+            case "Sunny":
+                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
+
+                break;
+            case "Clear":
+                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
+
+                break;
+            case "Mostly clear":
+                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
+
+                break;
+            case "Mostly sunny":
+                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
+
+                break;
+            case "Partly sunny":
+                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
+
+                break;
+            case "Intermittent clouds":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
+
+                break;
+            case "Hazy sunshine":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
+
+                break;
+            case "Partly cloudy":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
+
+                break;
+            case "Mostly cloudy":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
+
+                break;
+            case "Cloudy":
+                holder.listItemIcon.setImageResource(R.drawable.ic_cloudy);
+
+                break;
+            case "Few clouds":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
+
+                break;
+            case "Snow":
+                holder.listItemIcon.setImageResource(R.drawable.ic_snow);
+
+                break;
+            case "Mostly Cloudy w/ Snow":
+                holder.listItemIcon.setImageResource(R.drawable.ic_snow);
+
+                break;
+            case "Fog":
+                holder.listItemIcon.setImageResource(R.drawable.ic_fog);
+
+                break;
+            case "T-Storms":
+                holder.listItemIcon.setImageResource(R.drawable.ic_storm);
+
+                break;
+            case "Mostly Cloudy w/ T-Storms":
+                holder.listItemIcon.setImageResource(R.drawable.ic_storm);
+
+                break;
+            case "Partly Sunny w/ T-Storms":
+                holder.listItemIcon.setImageResource(R.drawable.ic_storm);
+
+                break;
+            case "Mostly Cloudy w/ Showers":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
+
+                break;
+
+            case "Partly Sunny w/ Showers":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
+                break;
+
+            case "Scattered Showers":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
+                break;
+            case "Moderate or heavy rain shower":
+                holder.listItemIcon.setImageResource(R.drawable.ic_rain);
+                break;
+            case "Showers":
+                holder.listItemIcon.setImageResource(R.drawable.ic_rain);
+                break;
+            case "Patchy rain possible":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
+                break;
+            case "Rain":
+                holder.listItemIcon.setImageResource(R.drawable.ic_rain);
+                break;
+            default:
+                break;
+        }
 //        holder.noticeDate.setText(notice.getDATE());
 //        holder.noticeTxt.setText(notice.getNAME());
 //        Picasso.with(mContext).load(notice.getImage()).placeholder(R.drawable.placeholdernewsquadrada).fit().into(holder.noticeImg);

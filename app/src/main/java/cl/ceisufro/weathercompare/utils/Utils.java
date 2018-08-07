@@ -28,7 +28,7 @@ public class Utils {
     public static String linkAccuWeatherForecast = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/52485?&apikey=oQc90sQxt6TfDUACaUMvw1WW5k0pno77&metric=true";
     public static String linkYahoo = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20%3D%20%22349871%22%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
 
-    public static String linkAPIXU = "https://api.apixu.com/v1/current.json?key="+keyAPIXU+"&q=Temuco&days=7";
+    public static String linkAPIXU = "https://api.apixu.com/v1/forecast.json?key="+keyAPIXU+"&q=Temuco&days=7";
     public static String linkDarkSky = "https://api.darksky.net/forecast/" + keyDarkSky+"/"+latTemuco+","+longTemuco+"?units=si";
 
 

@@ -1,41 +1,14 @@
 package cl.ceisufro.weathercompare.models;
 
-import java.util.Date;
-
 import io.realm.RealmObject;
 
 public class ApixuWeatherConditions extends RealmObject {
-    private Date id;
-    private String date;
     private int currentTemp;
     private int tempMax;
     private int tempMin;
-
+    private int date;
+    private String conditionText;
     public ApixuWeatherConditions() {
-    }
-
-    public ApixuWeatherConditions(Date id, String date, int currentTemp, int tempMax, int tempMin) {
-        this.id = id;
-        this.date = date;
-        this.currentTemp = currentTemp;
-        this.tempMax = tempMax;
-        this.tempMin = tempMin;
-    }
-
-    public Date getId() {
-        return id;
-    }
-
-    public void setId(Date id) {
-        this.id = id;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public int getCurrentTemp() {
@@ -62,4 +35,35 @@ public class ApixuWeatherConditions extends RealmObject {
         this.tempMin = tempMin;
     }
 
+    public int getDate() {
+        return date;
+    }
+
+    public void setDate(int date) {
+        this.date = date;
+    }
+
+    public String getConditionText() {
+        return conditionText;
+    }
+
+    public void setConditionText(String conditionText) {
+        this.conditionText = conditionText;
+    }
+
+    public ApixuWeatherConditions(int tempMax, int tempMin, int date, String conditionText) {
+        this.tempMax = tempMax;
+        this.tempMin = tempMin;
+        this.date = date;
+        this.conditionText = conditionText;
+    }
+
+    public ApixuWeatherConditions(int currentTemp, int tempMax, int tempMin, int date, String conditionText) {
+
+        this.currentTemp = currentTemp;
+        this.tempMax = tempMax;
+        this.tempMin = tempMin;
+        this.date = date;
+        this.conditionText = conditionText;
+    }
 }
