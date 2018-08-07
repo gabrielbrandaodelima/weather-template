@@ -26,7 +26,7 @@ public class OpenWeatherPresenterImpl implements OpenWeatherPresenter, OpenWeath
 
     @Override
     public void onSuccessCurrent(String response) {
-        openWeatherView.populateCurrent(response);
+        openWeatherView.getCurrentTemp(response);
 
     }
 

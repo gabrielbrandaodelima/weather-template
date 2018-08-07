@@ -11,5 +11,5 @@ public interface OpenWeatherView {
     void showLayout();
     void hideLayout();
 
-    void populateCurrent(String response);
+    void getCurrentTemp(String response);
 }

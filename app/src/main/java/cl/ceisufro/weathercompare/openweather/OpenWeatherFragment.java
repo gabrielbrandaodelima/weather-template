@@ -60,7 +60,7 @@ public class OpenWeatherFragment extends Fragment implements OpenWeatherView {
     OpenWeatherPresenter presenter;
     List<OpenWeatherConditions> openWeatherConditionsArrayList;
     List<OpenWeatherConditions> openWeatherConditionsNextDaysArrayList;
-    OpenWeatherConditions todayOpenWeatherCondition;
+    OpenWeatherConditions todayOpenWeatherCondition = new OpenWeatherConditions();
     OpenWeatherAdapter openWeatherAdapter;
     Realm realm;
     RequestQueue queueOpenWeather = null;
@@ -68,6 +68,7 @@ public class OpenWeatherFragment extends Fragment implements OpenWeatherView {
     RealmResults<OpenWeatherConditions> openWeatherConditionsRealmResults;
     @BindView(R.id.list_item_today_current_textview)
     TextView listItemTodayCurrentTextview;
+    private Integer currentTemp = null;
 
 //    private RealmChangeListener<RealmResults<OpenWeatherConditions>> realmChangeListener = openWeatherConditionsRealmResults -> {
 //        // Set the cities to the adapter only when async query is loaded.
@@ -137,7 +138,6 @@ public class OpenWeatherFragment extends Fragment implements OpenWeatherView {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         queueOpenWeather = Volley.newRequestQueue(getActivity());
-        presenter.callOpenWeather(queueOpenWeather);
         presenter.callOpenWeatherCurrent(queueOpenWeather);
     }
 
@@ -237,13 +237,15 @@ public class OpenWeatherFragment extends Fragment implements OpenWeatherView {
             openWeatherConditionsArrayList.add(openWeatherConditions);
 
         }
-
         todayOpenWeatherCondition = openWeatherConditionsArrayList.get(0);
+
+        todayOpenWeatherCondition.setCurrentTemp(currentTemp);
         int dateInTimestamp = todayOpenWeatherCondition.getDateInTimestamp();
 //        Date dateToday = Utils.getDate(dateInTimestamp);
         String dateTodayString = Utils.getDateString(dateInTimestamp);
 
         listItemTodayDateTextview.setText(dateTodayString);
+        listItemTodayCurrentTextview.setText(todayOpenWeatherCondition.getCurrentTemp() + "ºC");
         listItemTodayForecastTextview.setText(todayOpenWeatherCondition.getWeatherMain());
         listItemTodayHighTextview.setText(Math.round(todayOpenWeatherCondition.getTempMax()) + "ºC");
         listItemTodayLowTextview.setText(Math.round(todayOpenWeatherCondition.getTempMin()) + "ºC");
@@ -319,7 +321,6 @@ public class OpenWeatherFragment extends Fragment implements OpenWeatherView {
 
 
         displayWeather();
-
     }
 
     @Override
@@ -352,13 +353,12 @@ public class OpenWeatherFragment extends Fragment implements OpenWeatherView {
     }
 
     @Override
-    public void populateCurrent(String response) {
+    public void getCurrentTemp(String response) {
         JsonParser parser = new JsonParser();
         JsonObject json = (JsonObject) parser.parse(response);
         JsonElement temp = json.get("main").getAsJsonObject().get("temp");
-        todayOpenWeatherCondition.setCurrentTemp(temp.getAsInt());
-
-        listItemTodayCurrentTextview.setText(todayOpenWeatherCondition.getCurrentTemp() + "ºC");
+        currentTemp = temp.getAsInt();
+        presenter.callOpenWeather(queueOpenWeather);
     }
 
 

@@ -132,8 +132,8 @@ public class OpenWeatherAdapter extends RecyclerView.Adapter<OpenWeatherAdapter.
         String date = Utils.getDateString(dateInTimestamp);
         holder.listItemDateTextview.setText(date);
         holder.listItemForecastTextview.setText(openWeatherConditions.getWeatherMain());
-        holder.listItemHighTextview.setText(openWeatherConditions.getTempMax() + "ºC");
-        holder.listItemLowTextview.setText(openWeatherConditions.getTempMin() + "ºC");
+        holder.listItemHighTextview.setText(Math.round(openWeatherConditions.getTempMax()) + "ºC");
+        holder.listItemLowTextview.setText(Math.round(openWeatherConditions.getTempMin()) + "ºC");
         switch (openWeatherConditions.getWeatherMain()) {
             case "Clear":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
