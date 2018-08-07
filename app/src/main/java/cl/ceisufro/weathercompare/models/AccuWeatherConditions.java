@@ -1,40 +1,50 @@
 package cl.ceisufro.weathercompare.models;
 
-import java.util.Date;
-
 import io.realm.RealmObject;
 
 public class AccuWeatherConditions extends RealmObject {
-    private Date id;
-    private String date;
+    private int date;
     private int currentTemp;
     private int tempMax;
     private int tempMin;
+    private String dayPhrase;
+    private String nightPhrase;
 
     public AccuWeatherConditions() {
     }
 
-    public AccuWeatherConditions(Date id, String date, int currentTemp, int tempMax, int tempMin) {
-        this.id = id;
+    public AccuWeatherConditions(int date, int currentTemp, int tempMax, int tempMin, String dayPhrase, String nightPhrase) {
         this.date = date;
         this.currentTemp = currentTemp;
         this.tempMax = tempMax;
         this.tempMin = tempMin;
+        this.dayPhrase = dayPhrase;
+        this.nightPhrase = nightPhrase;
     }
 
-    public Date getId() {
-        return id;
+
+
+    public String getDayPhrase() {
+        return dayPhrase;
     }
 
-    public void setId(Date id) {
-        this.id = id;
+    public void setDayPhrase(String dayPhrase) {
+        this.dayPhrase = dayPhrase;
     }
 
-    public String getDate() {
+    public String getNightPhrase() {
+        return nightPhrase;
+    }
+
+    public void setNightPhrase(String nightPhrase) {
+        this.nightPhrase = nightPhrase;
+    }
+
+    public int getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(int date) {
         this.date = date;
     }
 
