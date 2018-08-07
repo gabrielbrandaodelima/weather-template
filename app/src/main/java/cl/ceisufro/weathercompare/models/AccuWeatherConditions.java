@@ -13,6 +13,14 @@ public class AccuWeatherConditions extends RealmObject {
     public AccuWeatherConditions() {
     }
 
+    public AccuWeatherConditions(int date, int tempMax, int tempMin, String dayPhrase, String nightPhrase) {
+        this.date = date;
+        this.tempMax = tempMax;
+        this.tempMin = tempMin;
+        this.dayPhrase = dayPhrase;
+        this.nightPhrase = nightPhrase;
+    }
+
     public AccuWeatherConditions(int date, int currentTemp, int tempMax, int tempMin, String dayPhrase, String nightPhrase) {
         this.date = date;
         this.currentTemp = currentTemp;

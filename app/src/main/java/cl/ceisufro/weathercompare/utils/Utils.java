@@ -1,11 +1,9 @@
 package cl.ceisufro.weathercompare.utils;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 public class Utils {
@@ -30,22 +28,29 @@ public class Utils {
     public static String linkAccuWeatherForecast = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/52485?&apikey=oQc90sQxt6TfDUACaUMvw1WW5k0pno77&metric=true";
     public static String linkYahoo = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20%3D%20%22349871%22%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
 
-    public static String linkAPIXU = "https://api.apixu.com/v1/current.json?key="+keyAPIXU+"&q=Temuco";
+    public static String linkAPIXU = "https://api.apixu.com/v1/current.json?key="+keyAPIXU+"&q=Temuco&days=7";
     public static String linkDarkSky = "https://api.darksky.net/forecast/" + keyDarkSky+"/"+latTemuco+","+longTemuco+"?units=si";
 
 
 
-    public static String getDateString(long time_stamp_server) {
+    public static String getDateString(long timestamp) {
 
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+//        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+//        cal.setTimeInMillis(timestamp * 1000L);
+//        String date = DateFormat.format("dd-MM-yyyy hh:mm:ss", cal).toString();
+//    DateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 //        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-        final String time_chat_s = df.format(time_stamp_server*1000);
-        return time_chat_s;
+//        final String time_chat_s = df.format(time_stamp_server*1000);
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(timestamp*1000L);
+        Date d = c.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(d);
     }
 //    DateFormat df = new SimpleDateFormat("HH:mm", Locale.US);
 //    final String time_chat_s = df.format(time_stamp_value);
 //
-    public static Date getDate(long time) {
+    public static Date getDate(int time) {
         Calendar cal = Calendar.getInstance();
         TimeZone tz = cal.getTimeZone();//get your local time zone.
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");

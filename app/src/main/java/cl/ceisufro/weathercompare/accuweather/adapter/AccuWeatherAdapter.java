@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
 import cl.ceisufro.weathercompare.models.AccuWeatherConditions;
+import cl.ceisufro.weathercompare.utils.Utils;
 
 public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.ViewHolder> {
 
@@ -127,9 +128,9 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final AccuWeatherConditions accuWeatherConditions = accuWeatherConditionsList.get(position);
-//        int dateInTimestamp = accuWeatherConditions.getDateInTimestamp();
-//        String date = Utils.getDateString(dateInTimestamp);
-//        holder.listItemDateTextview.setText(date);
+        int dateInTimestamp = accuWeatherConditions.getDate();
+        String date = Utils.getDateString(dateInTimestamp);
+        holder.listItemDateTextview.setText(date);
         holder.listItemForecastTextview.setText(accuWeatherConditions.getDayPhrase());
         holder.listItemHighTextview.setText(Math.round(accuWeatherConditions.getTempMax()) + "ºC");
         holder.listItemLowTextview.setText(Math.round(accuWeatherConditions.getTempMin()) + "ºC");
@@ -142,27 +143,27 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
                 break;
-            case "Mostly Clear":
+            case "Mostly clear":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
                 break;
-            case "Mostly Sunny":
+            case "Mostly sunny":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
                 break;
-            case "Partly Sunny":
+            case "Partly sunny":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
                 break;
-            case "Intermittent Clouds":
+            case "Intermittent clouds":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
 
                 break;
-            case "Hazy Sunshine":
+            case "Hazy sunshine":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
 
                 break;
-            case "Mostly Cloudy":
+            case "Mostly cloudy":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
 
                 break;
@@ -170,7 +171,7 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
                 holder.listItemIcon.setImageResource(R.drawable.ic_cloudy);
 
                 break;
-            case "Few Clouds":
+            case "Few clouds":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
 
                 break;
@@ -178,7 +179,7 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
                 holder.listItemIcon.setImageResource(R.drawable.ic_snow);
 
                 break;
-            case "Mostly Cloudy w/ Snow":
+            case "Mostly cloudy w/ snow":
                 holder.listItemIcon.setImageResource(R.drawable.ic_snow);
 
                 break;
@@ -190,24 +191,24 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
                 holder.listItemIcon.setImageResource(R.drawable.ic_storm);
 
                 break;
-            case "Mostly Cloudy w/ T-Storms":
+            case "Mostly cloudy w/ T-Storms":
                 holder.listItemIcon.setImageResource(R.drawable.ic_storm);
 
                 break;
-            case "Partly Sunny w/ T-Storms":
+            case "Partly sunny w/ T-Storms":
                 holder.listItemIcon.setImageResource(R.drawable.ic_storm);
 
                 break;
-            case "Mostly Cloudy w/ Showers":
+            case "Mostly cloudy w/ Showers":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
 
                 break;
 
-            case "Partly Sunny w/ Showers":
+            case "Partly sunny w/ Showers":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
                 break;
 
-            case "Scattered Showers":
+            case "Scattered showers":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
                 break;
             case "Showers":

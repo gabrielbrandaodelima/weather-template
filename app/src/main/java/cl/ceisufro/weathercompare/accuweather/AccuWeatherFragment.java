@@ -191,31 +191,34 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
         JsonParser parser = new JsonParser();
         JsonObject json = (JsonObject) parser.parse(response);
 
-        JsonArray jsonArrayForecast = json.get("list").getAsJsonArray();
+        JsonArray jsonArrayForecast = json.get("DailyForecasts").getAsJsonArray();
+
         for (JsonElement accuWeatherDateCondition :
                 jsonArrayForecast) {
-            JsonElement dateInTimestamp = accuWeatherDateCondition.getAsJsonObject().get("dt");
-            JsonElement temp = accuWeatherDateCondition.getAsJsonObject().get("temp");
-            JsonElement tempDay = temp.getAsJsonObject().get("day");
-            JsonElement tempMin = temp.getAsJsonObject().get("min");
-            JsonElement tempMax = temp.getAsJsonObject().get("max");
-            JsonElement tempNight = temp.getAsJsonObject().get("night");
-            JsonElement tempEve = temp.getAsJsonObject().get("eve");
-            JsonElement tempMorn = temp.getAsJsonObject().get("morn");
-            JsonElement pressure = accuWeatherDateCondition.getAsJsonObject().get("pressure");
-            JsonElement humidity = accuWeatherDateCondition.getAsJsonObject().get("humidity");
-            JsonElement weather = accuWeatherDateCondition.getAsJsonObject().get("weather");
-            JsonElement weatherId = weather.getAsJsonArray().get(0).getAsJsonObject().get("id");
-            JsonElement weatherMain = weather.getAsJsonArray().get(0).getAsJsonObject().getAsJsonObject().get("main");
-            JsonElement weatherDescription = weather.getAsJsonArray().get(0).getAsJsonObject().getAsJsonObject().get("description");
-            JsonElement weatherIcon = weather.getAsJsonArray().get(0).getAsJsonObject().getAsJsonObject().get("icon");
-            JsonElement speed = accuWeatherDateCondition.getAsJsonObject().get("speed");
-            JsonElement deg = accuWeatherDateCondition.getAsJsonObject().get("deg");
-            JsonElement clouds = accuWeatherDateCondition.getAsJsonObject().get("clouds");
-            JsonElement rain = accuWeatherDateCondition.getAsJsonObject().get("rain");
+            JsonElement dateInTimestamp = accuWeatherDateCondition.getAsJsonObject().get("EpochDate");
+            JsonElement tempMin = accuWeatherDateCondition.getAsJsonObject().get("Temperature").getAsJsonObject().get("Minimum").getAsJsonObject().get("Value");
+            JsonElement tempMax = accuWeatherDateCondition.getAsJsonObject().get("Temperature").getAsJsonObject().get("Maximum").getAsJsonObject().get("Value");
+            JsonElement dayPhrase = accuWeatherDateCondition.getAsJsonObject().get("Day").getAsJsonObject().get("IconPhrase");
+            JsonElement nightPhrase = accuWeatherDateCondition.getAsJsonObject().get("Night").getAsJsonObject().get("IconPhrase");
+//            JsonElement tempNight = temp.getAsJsonObject().get("night");
+//            JsonElement tempEve = temp.getAsJsonObject().get("eve");
+//            JsonElement tempMorn = temp.getAsJsonObject().get("morn");
+//            JsonElement pressure = accuWeatherDateCondition.getAsJsonObject().get("pressure");
+//            JsonElement humidity = accuWeatherDateCondition.getAsJsonObject().get("humidity");
+//            JsonElement weather = accuWeatherDateCondition.getAsJsonObject().get("weather");
+//            JsonElement weatherId = weather.getAsJsonArray().get(0).getAsJsonObject().get("id");
+//            JsonElement weatherMain = weather.getAsJsonArray().get(0).getAsJsonObject().getAsJsonObject().get("main");
+//            JsonElement weatherDescription = weather.getAsJsonArray().get(0).getAsJsonObject().getAsJsonObject().get("description");
+//            JsonElement weatherIcon = weather.getAsJsonArray().get(0).getAsJsonObject().getAsJsonObject().get("icon");
+//            JsonElement speed = accuWeatherDateCondition.getAsJsonObject().get("speed");
+//            JsonElement deg = accuWeatherDateCondition.getAsJsonObject().get("deg");
+//            JsonElement clouds = accuWeatherDateCondition.getAsJsonObject().get("clouds");
+//            JsonElement rain = accuWeatherDateCondition.getAsJsonObject().get("rain");
 
 
-            AccuWeatherConditions accuWeatherConditions;
+            AccuWeatherConditions accuWeatherConditions = new AccuWeatherConditions(dateInTimestamp.getAsInt(), tempMax.getAsInt(), tempMin.getAsInt(), dayPhrase.getAsString(), nightPhrase.getAsString());
+
+
 //            int dateTimestamp = dateInTimestamp.getAsInt();
 //            if (rain == null) {
 //                accuWeatherConditions = new AccuWeatherConditions(dateInTimestamp.getAsInt(), tempMax.getAsFloat(), tempMin.getAsFloat(), tempDay.getAsFloat(), tempNight.getAsFloat(),
@@ -235,7 +238,7 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
 //                );
 //
 //            }
-//            accuWeatherConditionsArrayList.add(accuWeatherConditions);
+            accuWeatherConditionsArrayList.add(accuWeatherConditions);
 
         }
         todayAccuWeatherCondition = accuWeatherConditionsArrayList.get(0);
@@ -252,86 +255,86 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
         listItemTodayLowTextview.setText(Math.round(todayAccuWeatherCondition.getTempMin()) + "ºC");
         switch (todayAccuWeatherCondition.getDayPhrase()) {
             case "Sunny":
-                listItemTodayIcon.setImageResource(R.drawable.ic_clear);
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
 
                 break;
             case "Clear":
-                listItemTodayIcon.setImageResource(R.drawable.ic_clear);
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
 
                 break;
-            case "Mostly Clear":
-                listItemTodayIcon.setImageResource(R.drawable.ic_clear);
+            case "Mostly clear":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
 
                 break;
-            case "Mostly Sunny":
-                listItemTodayIcon.setImageResource(R.drawable.ic_clear);
+            case "Mostly sunny":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
 
                 break;
-            case "Partly Sunny":
-                listItemTodayIcon.setImageResource(R.drawable.ic_clear);
+            case "Partly sunny":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
 
                 break;
-            case "Intermittent Clouds":
-                listItemTodayIcon.setImageResource(R.drawable.ic_light_clouds);
+            case "Intermittent clouds":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
 
                 break;
-            case "Hazy Sunshine":
-                listItemTodayIcon.setImageResource(R.drawable.ic_light_clouds);
+            case "Hazy sunshine":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
 
                 break;
-            case "Mostly Cloudy":
-                listItemTodayIcon.setImageResource(R.drawable.ic_light_clouds);
+            case "Mostly cloudy":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
 
                 break;
             case "Cloudy":
-                listItemTodayIcon.setImageResource(R.drawable.ic_cloudy);
+                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
 
                 break;
-            case "Few Clouds":
-                listItemTodayIcon.setImageResource(R.drawable.ic_light_clouds);
+            case "Few clouds":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
 
                 break;
             case "Snow":
-                listItemTodayIcon.setImageResource(R.drawable.ic_snow);
+                listItemTodayIcon.setImageResource(R.drawable.art_snow);
 
                 break;
             case "Mostly Cloudy w/ Snow":
-                listItemTodayIcon.setImageResource(R.drawable.ic_snow);
+                listItemTodayIcon.setImageResource(R.drawable.art_snow);
 
                 break;
             case "Fog":
-                listItemTodayIcon.setImageResource(R.drawable.ic_fog);
+                listItemTodayIcon.setImageResource(R.drawable.art_fog);
 
                 break;
             case "T-Storms":
-                listItemTodayIcon.setImageResource(R.drawable.ic_storm);
+                listItemTodayIcon.setImageResource(R.drawable.art_storm);
 
                 break;
             case "Mostly Cloudy w/ T-Storms":
-                listItemTodayIcon.setImageResource(R.drawable.ic_storm);
+                listItemTodayIcon.setImageResource(R.drawable.art_storm);
 
                 break;
             case "Partly Sunny w/ T-Storms":
-                listItemTodayIcon.setImageResource(R.drawable.ic_storm);
+                listItemTodayIcon.setImageResource(R.drawable.art_storm);
 
                 break;
             case "Mostly Cloudy w/ Showers":
-                listItemTodayIcon.setImageResource(R.drawable.ic_light_rain);
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
 
                 break;
 
             case "Partly Sunny w/ Showers":
-                listItemTodayIcon.setImageResource(R.drawable.ic_light_rain);
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
                 break;
 
             case "Scattered Showers":
-                listItemTodayIcon.setImageResource(R.drawable.ic_light_rain);
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
                 break;
             case "Showers":
-                listItemTodayIcon.setImageResource(R.drawable.ic_rain);
+                listItemTodayIcon.setImageResource(R.drawable.art_rain);
                 break;
             case "Rain":
-                listItemTodayIcon.setImageResource(R.drawable.ic_rain);
+                listItemTodayIcon.setImageResource(R.drawable.art_rain);
                 break;
             default:
                 break;
@@ -387,8 +390,9 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
     @Override
     public void getCurrentTemp(String response) {
         JsonParser parser = new JsonParser();
-        JsonObject json = (JsonObject) parser.parse(response);
-        JsonElement temp = json.get("main").getAsJsonObject().get("temp");
+        JsonArray json = (JsonArray) parser.parse(response);
+        JsonElement temp = json.get(0).getAsJsonObject().get("Temperature").getAsJsonObject().get("Metric").getAsJsonObject().get("Value");
+
         currentTemp = temp.getAsInt();
         presenter.callAccuWeather(queueAccuWeather);
     }

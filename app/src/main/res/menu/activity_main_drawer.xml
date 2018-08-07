@@ -22,7 +22,7 @@
         <item
             android:id="@+id/nav_accu"
             android:iconTint="@color/colorButtonIcon"
-            android:enabled="false"
+            android:enabled="true"
             android:title="AccuWeather" />
         <item
             android:id="@+id/nav_apixu"
