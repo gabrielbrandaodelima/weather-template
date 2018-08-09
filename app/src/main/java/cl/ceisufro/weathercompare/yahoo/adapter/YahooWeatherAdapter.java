@@ -134,6 +134,10 @@ public class YahooWeatherAdapter extends RecyclerView.Adapter<YahooWeatherAdapte
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
                 break;
+            case "Mostly Sunny":
+                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
+
+                break;
             case "Clear":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
@@ -165,6 +169,9 @@ public class YahooWeatherAdapter extends RecyclerView.Adapter<YahooWeatherAdapte
 
             case "Partly Cloudy":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
+                break;
+            case "Cloudy":
+                holder.listItemIcon.setImageResource(R.drawable.ic_cloudy);
                 break;
             case "Mostly Cloudy":
                 holder.listItemIcon.setImageResource(R.drawable.ic_cloudy);

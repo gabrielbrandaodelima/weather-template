@@ -32,6 +32,9 @@ public class Utils {
     public static String linkDarkSky = "https://api.darksky.net/forecast/" + keyDarkSky+"/"+latTemuco+","+longTemuco+"?units=si";
 
 
+    public static String LINK_API_CLIMA = "http://moscu.ceisufro.cl/ApiClima/index.php?eID=api_clima_clima";
+
+
 
     public static String getDateString(long timestamp) {
 
@@ -65,5 +68,7 @@ public class Utils {
         }
         return date;
     }
+
+
 }
 

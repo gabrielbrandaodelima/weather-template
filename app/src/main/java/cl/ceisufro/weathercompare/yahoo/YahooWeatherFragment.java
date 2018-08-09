@@ -186,6 +186,10 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
         listItemTodayHighTextview.setText(todayYahooWeatherCondition.getTempMax()+"ºC");
         listItemTodayLowTextview.setText(todayYahooWeatherCondition.getTempMin()+"ºC");
         switch (todayYahooWeatherCondition.getText()) {
+            case "Mostly Sunny":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+
+                break;
             case "Sunny":
                 listItemTodayIcon.setImageResource(R.drawable.art_clear);
 
@@ -223,6 +227,9 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
                 listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
                 break;
             case "Mostly Cloudy":
+                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
+                break;
+            case "Cloudy":
                 listItemTodayIcon.setImageResource(R.drawable.art_clouds);
                 break;
 
