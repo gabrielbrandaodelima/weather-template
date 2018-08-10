@@ -24,11 +24,13 @@ public class Utils {
 //    public static String linkClimatempo = "http://apiadvisor.climatempo.com.br/api/v1/forecast/locale/3477/days/15?token=" + tokenClimatempo;
     public static String linkOpenWeather = "http://api.openweathermap.org/data/2.5/forecast/daily?id=3870011&units=metric&APPID=a130a22f1886d04a563953f22faf3980";
     public static String linkOpenWeatherCurrent = "http://api.openweathermap.org/data/2.5/weather?id="+idTemucoOpenWeather+"&units=metric&APPID=a130a22f1886d04a563953f22faf3980";
-    public static String linkAccuWeatherCurrent = "http://dataservice.accuweather.com/currentconditions/v1/52485?&apikey=oQc90sQxt6TfDUACaUMvw1WW5k0pno77";
+    public static String linkAccuWeatherCurrent = "http://dataservice.accuweather.com/currentconditions/v1/52485?&apikey=oQc90sQxt6TfDUACaUMvw1WW5k0pno77&language=es-cl&details=true";
     public static String linkAccuWeatherForecast = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/52485?&apikey=oQc90sQxt6TfDUACaUMvw1WW5k0pno77&metric=true";
+    public static String linkAccuWeatherForecast1day = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/52485?&apikey=oQc90sQxt6TfDUACaUMvw1WW5k0pno77&metric=true&language=es-cl";
     public static String linkYahoo = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20%3D%20%22349871%22%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
 
     public static String linkAPIXU = "https://api.apixu.com/v1/forecast.json?key="+keyAPIXU+"&q=Temuco&days=7";
+    public static String linkAPIXUCurrent = "https://api.apixu.com/v1/current.json?key=ebc53b04f7664455933214540180108&q=Temuco";
     public static String linkDarkSky = "https://api.darksky.net/forecast/" + keyDarkSky+"/"+latTemuco+","+longTemuco+"?units=si";
 
 
@@ -48,6 +50,20 @@ public class Utils {
         c.setTimeInMillis(timestamp*1000L);
         Date d = c.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(d);
+    }
+    public static String getDateAndHourString(long timestamp) {
+
+//        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+//        cal.setTimeInMillis(timestamp * 1000L);
+//        String date = DateFormat.format("dd-MM-yyyy hh:mm:ss", cal).toString();
+//    DateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+//        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+//        final String time_chat_s = df.format(time_stamp_server*1000);
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(timestamp*1000L);
+        Date d = c.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return sdf.format(d);
     }
 //    DateFormat df = new SimpleDateFormat("HH:mm", Locale.US);

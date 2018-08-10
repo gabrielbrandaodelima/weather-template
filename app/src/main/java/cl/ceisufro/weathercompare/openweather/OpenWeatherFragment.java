@@ -259,11 +259,11 @@ public class OpenWeatherFragment extends Fragment implements OpenWeatherView {
 
                 break;
             case "Scattered Clouds":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
 
                 break;
             case "Clouds":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
 
                 break;
             case "Few Clouds":

@@ -3,6 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#3266FF</color>
+    <color name="colorRed">#D43935</color>
 
 
     <color name="colorButtonIcon">#FEB81E</color>

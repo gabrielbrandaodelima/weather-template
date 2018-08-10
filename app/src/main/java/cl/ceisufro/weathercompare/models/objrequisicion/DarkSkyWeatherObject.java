@@ -18,7 +18,7 @@ public class DarkSkyWeatherObject extends RealmObject {
     private float tMax;
     private float tMin;
     private float presion;
-    private int humedad;
+    private float humedad;
     private float vViento;
 
     public DarkSkyWeatherObject() {
@@ -65,11 +65,11 @@ public class DarkSkyWeatherObject extends RealmObject {
         this.presion = presion;
     }
 
-    public int getHumedad() {
+    public float getHumedad() {
         return humedad;
     }
 
-    public void setHumedad(int humedad) {
+    public void setHumedad(float humedad) {
         this.humedad = humedad;
     }
 

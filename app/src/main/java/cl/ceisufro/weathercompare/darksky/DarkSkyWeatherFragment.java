@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.johnhiott.darkskyandroidlib.ForecastApi;
 import com.johnhiott.darkskyandroidlib.models.DataBlock;
 import com.johnhiott.darkskyandroidlib.models.DataPoint;
 import com.johnhiott.darkskyandroidlib.models.WeatherResponse;
@@ -85,7 +84,6 @@ public class DarkSkyWeatherFragment extends Fragment implements DarkSkyWeatherVi
 
         // Create a new empty instance of Realm
         realm = Realm.getDefaultInstance();
-        ForecastApi.create(Utils.keyDarkSky);
 
         // Obtain the cities in the Realm with asynchronous query.
         darkskyWeatherConditionsRealmResults = realm.where(DarkSkyWeatherConditions.class).findAllAsync();

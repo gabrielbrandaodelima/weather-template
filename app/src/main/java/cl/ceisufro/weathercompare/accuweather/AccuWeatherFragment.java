@@ -71,12 +71,6 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
     TextView listItemTodayCurrentTextview;
     private Integer currentTemp = null;
 
-//    private RealmChangeListener<RealmResults<AccuWeatherConditions>> realmChangeListener = accuWeatherConditionsRealmResults -> {
-//        // Set the cities to the adapter only when async query is loaded.
-//        // It will also be called for any future writes made to the Realm.
-//        accuWeatherAdapter.setData(accuWeatherConditionsRealmResults);
-//    };
-//    private Tracker mTracker;
 
     public static String getFragmentTag() {
         return "accu";
@@ -86,14 +80,6 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
         // Required empty public constructor
     }
 
-//    private void initAdapter() {
-//        accuWeatherAdapter = new AccuWeatherAdapter(getActivity(), accuWeatherConditionsNextDaysArrayList);
-//        forecastRecycle.setLayoutManager((new LinearLayoutManager(getActivity())));
-//        forecastRecycle.setNestedScrollingEnabled(false);
-//
-////        forecastRecycle.setAdapter(accuWeatherAdapter);
-//
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +87,6 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
         super.onCreate(savedInstanceState);
         // Clear the realm from last time
         //noinspection ConstantConditions
-//        Realm.deleteRealm(Realm.getDefaultConfiguration());
 
         // Create a new empty instance of Realm
         realm = Realm.getDefaultInstance();
@@ -120,11 +105,6 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
         View view = inflater.inflate(R.layout.fragment_forecast, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-//        if (!EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().register(this);
-//
-//        }
-//
         hideLayout();
         showProgress();
 
@@ -163,12 +143,6 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        unbinder.unbind();
-
-//        if (EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().unregister(this);
-//
-//        }
         unbinder.unbind();
     }
 
@@ -200,44 +174,11 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
             JsonElement tempMax = accuWeatherDateCondition.getAsJsonObject().get("Temperature").getAsJsonObject().get("Maximum").getAsJsonObject().get("Value");
             JsonElement dayPhrase = accuWeatherDateCondition.getAsJsonObject().get("Day").getAsJsonObject().get("IconPhrase");
             JsonElement nightPhrase = accuWeatherDateCondition.getAsJsonObject().get("Night").getAsJsonObject().get("IconPhrase");
-//            JsonElement tempNight = temp.getAsJsonObject().get("night");
-//            JsonElement tempEve = temp.getAsJsonObject().get("eve");
-//            JsonElement tempMorn = temp.getAsJsonObject().get("morn");
-//            JsonElement pressure = accuWeatherDateCondition.getAsJsonObject().get("pressure");
-//            JsonElement humidity = accuWeatherDateCondition.getAsJsonObject().get("humidity");
-//            JsonElement weather = accuWeatherDateCondition.getAsJsonObject().get("weather");
-//            JsonElement weatherId = weather.getAsJsonArray().get(0).getAsJsonObject().get("id");
-//            JsonElement weatherMain = weather.getAsJsonArray().get(0).getAsJsonObject().getAsJsonObject().get("main");
-//            JsonElement weatherDescription = weather.getAsJsonArray().get(0).getAsJsonObject().getAsJsonObject().get("description");
-//            JsonElement weatherIcon = weather.getAsJsonArray().get(0).getAsJsonObject().getAsJsonObject().get("icon");
-//            JsonElement speed = accuWeatherDateCondition.getAsJsonObject().get("speed");
-//            JsonElement deg = accuWeatherDateCondition.getAsJsonObject().get("deg");
-//            JsonElement clouds = accuWeatherDateCondition.getAsJsonObject().get("clouds");
-//            JsonElement rain = accuWeatherDateCondition.getAsJsonObject().get("rain");
 
 
             AccuWeatherConditions accuWeatherConditions = new AccuWeatherConditions(dateInTimestamp.getAsInt(), tempMax.getAsInt(), tempMin.getAsInt(), dayPhrase.getAsString(), nightPhrase.getAsString());
 
 
-//            int dateTimestamp = dateInTimestamp.getAsInt();
-//            if (rain == null) {
-//                accuWeatherConditions = new AccuWeatherConditions(dateInTimestamp.getAsInt(), tempMax.getAsFloat(), tempMin.getAsFloat(), tempDay.getAsFloat(), tempNight.getAsFloat(),
-//                        tempEve.getAsFloat(), tempMorn.getAsFloat(), pressure.getAsFloat(), humidity.getAsFloat()
-//                        , weatherId.getAsInt(), weatherMain.getAsString(), weatherDescription.getAsString(), weatherIcon.getAsString(),
-//                        speed.getAsFloat(), deg.getAsInt(), clouds.getAsInt()
-//
-//                );
-//
-//
-//            } else {
-//                accuWeatherConditions = new AccuWeatherConditions(dateInTimestamp.getAsInt(), tempMax.getAsFloat(), tempMin.getAsFloat(), tempDay.getAsFloat(), tempNight.getAsFloat(),
-//                        tempEve.getAsFloat(), tempMorn.getAsFloat(), pressure.getAsFloat(), humidity.getAsFloat()
-//                        , weatherId.getAsInt(), weatherMain.getAsString(), weatherDescription.getAsString(), weatherIcon.getAsString(),
-//                        speed.getAsFloat(), deg.getAsInt(), clouds.getAsInt(), rain.getAsFloat()
-//
-//                );
-//
-//            }
             accuWeatherConditionsArrayList.add(accuWeatherConditions);
 
         }
