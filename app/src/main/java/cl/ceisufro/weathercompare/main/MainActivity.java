@@ -407,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         postObjectRequest.sendRequest(queue, yahooWeatherObjectString, new OnPostRequestCallback() {
                             @Override
                             public void onSuccess(String response) {
-                                Toast.makeText(context, "Yahoo " + response, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context, "Yahoo " + response, Toast.LENGTH_SHORT).show();
                                 // Put here YOUR code.
 
                                 yahooWeatherObject = null;
@@ -474,7 +474,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         postObjectRequest.sendRequest(queue, openWeatherObjectString, new OnPostRequestCallback() {
                             @Override
                             public void onSuccess(String response) {
-                                Toast.makeText(context, "Open " + response, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context, "Open " + response, Toast.LENGTH_SHORT).show();
                                 // Put here YOUR code.
                                 openWeatherObject = null;
                             }
@@ -548,7 +548,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         postObjectRequest.sendRequest(queue, apixuWeatherObjectString, new OnPostRequestCallback() {
                             @Override
                             public void onSuccess(String response) {
-                                Toast.makeText(context, "Apixu " + response, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context, "Apixu " + response, Toast.LENGTH_SHORT).show();
                                 // Put here YOUR code.
                                 apixuWeatherObject = null;
                             }
@@ -636,7 +636,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 postObjectRequest.sendRequest(queue, accuWeatherObjectString, new OnPostRequestCallback() {
                                     @Override
                                     public void onSuccess(String response) {
-                                        Toast.makeText(context, "Accu " + response, Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(context, "Accu " + response, Toast.LENGTH_SHORT).show();
                                         // Put here YOUR code.
                                         accuWeatherObject = null;
                                     }
@@ -722,7 +722,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         postObjectRequest.sendRequest(queue, darkSkyWeatherObjectString, new OnPostRequestCallback() {
                             @Override
                             public void onSuccess(String response) {
-                                Toast.makeText(context, "Dark " + response, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context, "Dark " + response, Toast.LENGTH_SHORT).show();
                                 // Put here YOUR code.
                                 darkSkyWeatherObject = null;
                             }
