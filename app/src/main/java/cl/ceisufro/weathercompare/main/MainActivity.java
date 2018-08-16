@@ -18,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +43,8 @@ import com.johnhiott.darkskyandroidlib.models.DataBlock;
 import com.johnhiott.darkskyandroidlib.models.DataPoint;
 import com.johnhiott.darkskyandroidlib.models.WeatherResponse;
 
+import javax.annotation.Nullable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
@@ -63,8 +64,6 @@ import cl.ceisufro.weathercompare.utils.Utils;
 import cl.ceisufro.weathercompare.yahoo.YahooWeatherFragment;
 import retrofit.Callback;
 import retrofit.RetrofitError;
-
-import static android.content.ContentValues.TAG;
 
 //import cl.ceisufro.weathercompare.network.YahooWeatherRequest;
 
@@ -127,6 +126,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         ForecastApi.create(Utils.keyDarkSky);
 
+//        final SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putBoolean("isOn", false);
+//        editor.apply();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         Menu menu = navigationView.getMenu();
@@ -189,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setMainFragmentSelected() {
 
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        mainLayout.removeAllViews();
         if (selectedFragment != null) {
             transaction.remove(selectedFragment);
         }
@@ -230,6 +234,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 
     @Override
@@ -351,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             void onSuccessDark(WeatherResponse response);
 
-            void onError(String response);
+            void onError(@Nullable String response);
         }
 
         @Override
@@ -761,7 +783,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    callback.onError(error.getLocalizedMessage());
+                    callback.onError(null);
 
                 }
             });
@@ -790,8 +812,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 @Override
                 public void failure(RetrofitError retrofitError) {
-                    Log.d(TAG, "Error while calling: " + retrofitError.getUrl());
-                    callback.onError(retrofitError.getResponse().toString());
+                    callback.onError(null);
 
                 }
             });

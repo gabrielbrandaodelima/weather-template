@@ -243,12 +243,14 @@ public class OpenWeatherFragment extends Fragment implements OpenWeatherView {
         int dateInTimestamp = todayOpenWeatherCondition.getDateInTimestamp();
 //        Date dateToday = Utils.getDate(dateInTimestamp);
         String dateTodayString = Utils.getDateString(dateInTimestamp);
+        if (listItemTodayDateTextview != null) {
 
-        listItemTodayDateTextview.setText(dateTodayString);
-        listItemTodayCurrentTextview.setText(todayOpenWeatherCondition.getCurrentTemp() + "ºC");
-        listItemTodayForecastTextview.setText(todayOpenWeatherCondition.getWeatherMain());
-        listItemTodayHighTextview.setText(Math.round(todayOpenWeatherCondition.getTempMax()) + "ºC");
-        listItemTodayLowTextview.setText(Math.round(todayOpenWeatherCondition.getTempMin()) + "ºC");
+            listItemTodayDateTextview.setText(dateTodayString);
+            listItemTodayCurrentTextview.setText(todayOpenWeatherCondition.getCurrentTemp() + "ºC");
+            listItemTodayForecastTextview.setText(todayOpenWeatherCondition.getWeatherMain());
+            listItemTodayHighTextview.setText(Math.round(todayOpenWeatherCondition.getTempMax()) + "ºC");
+            listItemTodayLowTextview.setText(Math.round(todayOpenWeatherCondition.getTempMin()) + "ºC");
+        }
         switch (todayOpenWeatherCondition.getWeatherMain()) {
             case "Clear":
                 listItemTodayIcon.setImageResource(R.drawable.art_clear);

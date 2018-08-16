@@ -189,11 +189,14 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
         Date dateToday = Utils.getDate(dateInTimestamp);
         String dateTodayString = Utils.getDateString(dateInTimestamp);
 
-        listItemTodayDateTextview.setText(dateTodayString);
-        listItemTodayCurrentTextview.setText(todayAccuWeatherCondition.getCurrentTemp() + "ºC");
-        listItemTodayForecastTextview.setText(todayAccuWeatherCondition.getDayPhrase());
-        listItemTodayHighTextview.setText(Math.round(todayAccuWeatherCondition.getTempMax()) + "ºC");
-        listItemTodayLowTextview.setText(Math.round(todayAccuWeatherCondition.getTempMin()) + "ºC");
+        if (listItemTodayCurrentTextview != null) {
+            listItemTodayDateTextview.setText(dateTodayString);
+            listItemTodayCurrentTextview.setText(todayAccuWeatherCondition.getCurrentTemp() + "ºC");
+            listItemTodayForecastTextview.setText(todayAccuWeatherCondition.getDayPhrase());
+            listItemTodayHighTextview.setText(Math.round(todayAccuWeatherCondition.getTempMax()) + "ºC");
+            listItemTodayLowTextview.setText(Math.round(todayAccuWeatherCondition.getTempMin()) + "ºC");
+
+        }
         switch (todayAccuWeatherCondition.getDayPhrase()) {
             case "Sunny":
                 listItemTodayIcon.setImageResource(R.drawable.art_clear);

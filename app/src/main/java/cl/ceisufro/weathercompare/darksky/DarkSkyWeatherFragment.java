@@ -192,11 +192,14 @@ public class DarkSkyWeatherFragment extends Fragment implements DarkSkyWeatherVi
         int dateInTimestamp = todayDarkSkyWeatherCondition.getDate();
         String dateTodayString = Utils.getDateString(dateInTimestamp);
 
-        listItemTodayDateTextview.setText(dateTodayString);
-        listItemTodayForecastTextview.setText(todayDarkSkyWeatherCondition.getSummary());
-        listItemTodayCurrentTextview.setText(todayDarkSkyWeatherCondition.getCurrentTemp() + "ºC");
-        listItemTodayHighTextview.setText(todayDarkSkyWeatherCondition.getTemperatureHigh() + "ºC");
-        listItemTodayLowTextview.setText(todayDarkSkyWeatherCondition.getTemperatureLow() + "ºC");
+        if (listItemTodayDateTextview != null) {
+
+            listItemTodayDateTextview.setText(dateTodayString);
+            listItemTodayForecastTextview.setText(todayDarkSkyWeatherCondition.getSummary());
+            listItemTodayCurrentTextview.setText(todayDarkSkyWeatherCondition.getCurrentTemp() + "ºC");
+            listItemTodayHighTextview.setText(todayDarkSkyWeatherCondition.getTemperatureHigh() + "ºC");
+            listItemTodayLowTextview.setText(todayDarkSkyWeatherCondition.getTemperatureLow() + "ºC");
+        }
         switch (todayDarkSkyWeatherCondition.getIcon()) {
             case "Sunny":
                 listItemTodayIcon.setImageResource(R.drawable.art_clear);

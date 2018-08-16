@@ -249,11 +249,14 @@ public class APIXUWeatherFragment extends Fragment implements ApixuWeatherView {
         Date dateToday = Utils.getDate(dateInTimestamp);
         String dateTodayString = Utils.getDateString(dateInTimestamp);
 //
-        listItemTodayDateTextview.setText(dateTodayString);
-        listItemTodayCurrentTextview.setText(todayApixuWeatherCondition.getCurrentTemp() + "ºC");
-        listItemTodayForecastTextview.setText(todayApixuWeatherCondition.getConditionText());
-        listItemTodayHighTextview.setText(Math.round(todayApixuWeatherCondition.getTempMax()) + "ºC");
-        listItemTodayLowTextview.setText(Math.round(todayApixuWeatherCondition.getTempMin()) + "ºC");
+        if (listItemTodayCurrentTextview != null) {
+            listItemTodayDateTextview.setText(dateTodayString);
+            listItemTodayCurrentTextview.setText(todayApixuWeatherCondition.getCurrentTemp() + "ºC");
+            listItemTodayForecastTextview.setText(todayApixuWeatherCondition.getConditionText());
+            listItemTodayHighTextview.setText(Math.round(todayApixuWeatherCondition.getTempMax()) + "ºC");
+            listItemTodayLowTextview.setText(Math.round(todayApixuWeatherCondition.getTempMin()) + "ºC");
+
+        }
         switch (todayApixuWeatherCondition.getConditionText()) {
             case "Sunny":
                 listItemTodayIcon.setImageResource(R.drawable.art_clear);

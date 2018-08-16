@@ -37,7 +37,7 @@ public class POSTObjectRequest {
                     public void onErrorResponse(VolleyError error) {
                         // error
                         Log.d("Error.Response", error.getMessage());
-                        callback.onFailure(error.getMessage());
+                        callback.onFailure(null);
 
                     }
                 }

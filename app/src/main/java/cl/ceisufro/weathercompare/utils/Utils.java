@@ -16,7 +16,10 @@ public class Utils {
     public static String yahooWeatherAPPID = "3nuztA76";
     public static String keyOpenWeather = "a130a22f1886d04a563953f22faf3980";
     public static String keyDarkSky = "04bd2a806143d389e5814a6ae0cc6b5c";
-    public static String keyAccuWeather = "oQc90sQxt6TfDUACaUMvw1WW5k0pno77";
+//    public static String keyAccuWeather = "oQc90sQxt6TfDUACaUMvw1WW5k0pno77";  FIRST KEY
+
+//    public static String keyAccuWeather = "MLPJM9uoLicKgPSMfr0etmM8jZdm1TWO"; SECOND KEY
+    public static String keyAccuWeather = "gocXFyTJhu5bFWovlqVM1a12gQ3OkAjL";
     public static String idTemucoOpenWeather = "3870011";
     public static String idTemucoAccuWeather = "52485";
     public static String latTemuco = "-38.7359";
@@ -24,9 +27,9 @@ public class Utils {
 //    public static String linkClimatempo = "http://apiadvisor.climatempo.com.br/api/v1/forecast/locale/3477/days/15?token=" + tokenClimatempo;
     public static String linkOpenWeather = "http://api.openweathermap.org/data/2.5/forecast/daily?id=3870011&units=metric&APPID=a130a22f1886d04a563953f22faf3980";
     public static String linkOpenWeatherCurrent = "http://api.openweathermap.org/data/2.5/weather?id="+idTemucoOpenWeather+"&units=metric&APPID=a130a22f1886d04a563953f22faf3980";
-    public static String linkAccuWeatherCurrent = "http://dataservice.accuweather.com/currentconditions/v1/52485?&apikey=oQc90sQxt6TfDUACaUMvw1WW5k0pno77&language=es-cl&details=true";
-    public static String linkAccuWeatherForecast = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/52485?&apikey=oQc90sQxt6TfDUACaUMvw1WW5k0pno77&metric=true";
-    public static String linkAccuWeatherForecast1day = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/52485?&apikey=oQc90sQxt6TfDUACaUMvw1WW5k0pno77&metric=true&language=es-cl";
+    public static String linkAccuWeatherCurrent = "http://dataservice.accuweather.com/currentconditions/v1/52485?&apikey="+keyAccuWeather+"&language=es-cl&details=true";
+    public static String linkAccuWeatherForecast = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/52485?&apikey="+keyAccuWeather+"&metric=true";
+    public static String linkAccuWeatherForecast1day = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/52485?&apikey="+keyAccuWeather+"&metric=true&language=es-cl";
     public static String linkYahoo = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20%3D%20%22349871%22%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
 
     public static String linkAPIXU = "https://api.apixu.com/v1/forecast.json?key="+keyAPIXU+"&q=Temuco&days=7";

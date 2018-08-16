@@ -179,12 +179,14 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
         JsonElement todayTempHigh = forecastArraylist.get(0).getAsJsonObject().get("high");
         JsonElement todayTempLow = forecastArraylist.get(0).getAsJsonObject().get("low");
         YahooWeatherConditions todayYahooWeatherCondition = new YahooWeatherConditions(actualDate.getAsString(), actualText.getAsString(), actualCode.getAsInt(), actualTemp.getAsInt(), todayTempHigh.getAsInt(), todayTempLow.getAsInt());
+        if (listItemTodayDateTextview != null) {
 
-        listItemTodayDateTextview.setText(todayYahooWeatherCondition.getDate());
-        listItemTodayForecastTextview.setText(todayYahooWeatherCondition.getText());
-        listItemTodayCurrentTextview.setText(todayYahooWeatherCondition.getCurrentTemp()+"ºC");
-        listItemTodayHighTextview.setText(todayYahooWeatherCondition.getTempMax()+"ºC");
-        listItemTodayLowTextview.setText(todayYahooWeatherCondition.getTempMin()+"ºC");
+            listItemTodayDateTextview.setText(todayYahooWeatherCondition.getDate());
+            listItemTodayForecastTextview.setText(todayYahooWeatherCondition.getText());
+            listItemTodayCurrentTextview.setText(todayYahooWeatherCondition.getCurrentTemp()+"ºC");
+            listItemTodayHighTextview.setText(todayYahooWeatherCondition.getTempMax()+"ºC");
+            listItemTodayLowTextview.setText(todayYahooWeatherCondition.getTempMin()+"ºC");
+        }
         switch (todayYahooWeatherCondition.getText()) {
             case "Mostly Sunny":
                 listItemTodayIcon.setImageResource(R.drawable.art_clear);
