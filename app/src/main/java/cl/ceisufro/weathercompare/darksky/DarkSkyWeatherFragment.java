@@ -108,7 +108,7 @@ public class DarkSkyWeatherFragment extends Fragment implements DarkSkyWeatherVi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        presenter.callDarkSkyRequest(Utils.latTemuco, Utils.longTemuco);
+//        presenter.callDarkSkyRequest(Utils.latTemuco, Utils.longTemuco);
 
     }
 

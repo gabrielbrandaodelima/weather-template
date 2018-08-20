@@ -139,7 +139,7 @@ public class APIXUWeatherFragment extends Fragment implements ApixuWeatherView {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         queueApixuWeather = Volley.newRequestQueue(getActivity());
-        presenter.callApixuWeather(queueApixuWeather);
+//        presenter.callApixuWeather(queueApixuWeather);
 //        presenter.callApixuWeatherCurrent(queueApixuWeather);
     }
 

@@ -30,23 +30,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".scheduler.JobCallService"
-            android:label="Word service"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"
-            >
-
-        </service>
-
-        <receiver android:name=".scheduler.StartCallreceiver" >
+        <receiver
+            android:name=".JobCreator.NetworkJobCreator$AddReceiver"
+            android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.evernote.android.job.ADD_JOB_CREATOR"/>
             </intent-filter>
-
         </receiver>
+        <!--<service-->
+            <!--android:name=".scheduler.JobCallService"-->
+            <!--android:label="Word service"-->
+            <!--android:permission="android.permission.BIND_JOB_SERVICE"-->
+            <!--android:exported="true"-->
+            <!--&gt;-->
 
-        <receiver android:name=".main.MainActivity$CallReceiver" />
+        <!--</service>-->
+
+        <!--<receiver android:name=".scheduler.StartCallreceiver" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+            <!--</intent-filter>-->
+
+        <!--</receiver>-->
+
+        <!--<receiver android:name=".main.MainActivity$CallReceiver" />-->
     </application>
 
 </manifest>

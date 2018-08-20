@@ -16,10 +16,8 @@ public class UtilScheduler {
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY); // require unmetered network
         //builder.setRequiresDeviceIdle(true); // device should be idle
         //builder.setRequiresCharging(false); // we don't care if the device is charging or not
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             JobScheduler jobScheduler = null;
             jobScheduler = context.getSystemService(JobScheduler.class);
             jobScheduler.schedule(builder.build());
-        }
     }
 }

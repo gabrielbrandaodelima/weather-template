@@ -38,8 +38,14 @@ public class Utils {
 
 
     public static String LINK_API_CLIMA = "http://moscu.ceisufro.cl/ApiClima/index.php?eID=api_clima_clima";
+    public static String LINK_API_PROMEDIO = "http://moscu.ceisufro.cl/ApiClima/index.php?eID=api_clima_promedio";
 
 
+    public static double convertYahooPressureMistake(double value) {
+        Double correctedValueInMb = value/33.8639;
+
+        return correctedValueInMb.floatValue();
+    }
 
     public static String getDateString(long timestamp) {
 

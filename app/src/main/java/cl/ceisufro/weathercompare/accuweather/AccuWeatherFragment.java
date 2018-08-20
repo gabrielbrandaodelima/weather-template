@@ -119,7 +119,7 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         queueAccuWeather = Volley.newRequestQueue(getActivity());
-        presenter.callAccuWeatherCurrent(queueAccuWeather);
+//        presenter.callAccuWeatherCurrent(queueAccuWeather);
     }
 
     @Override

@@ -36,7 +36,49 @@ public class POSTObjectRequest {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // error
-                        Log.d("Error.Response", error.getMessage());
+//                        Log.d("Error.Response", err/or.getMessage());
+                        callback.onFailure(null);
+
+                    }
+                }
+        ) {
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+
+                return weatherObject.getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+
+                return "application/json";
+            }
+
+        };
+// Add the request to the RequestQueue.
+        queue.add(postRequest);
+
+    }
+    public void sendPromedioRequest(RequestQueue queue, final String weatherObject, final OnPostRequestCallback callback) {
+
+        String url = Utils.LINK_API_PROMEDIO;
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        Log.d("Response", response);
+                        callback.onSuccess(response);
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+//                        Log.d("Error.Response", err/or.getMessage());
                         callback.onFailure(null);
 
                     }

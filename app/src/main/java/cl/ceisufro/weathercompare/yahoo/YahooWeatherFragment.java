@@ -110,7 +110,7 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         queueYAhooWeather = Volley.newRequestQueue(getActivity());
-        presenter.callYahooWeather(queueYAhooWeather);
+//        presenter.callYahooWeather(queueYAhooWeather);
 
     }
 
@@ -262,7 +262,9 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
 
 
         displayWeather();
+
     }
+
 
     @Override
     public void showProgress() {

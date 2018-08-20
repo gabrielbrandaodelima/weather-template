@@ -3,8 +3,11 @@ package cl.ceisufro.weathercompare.application;
 import android.app.Activity;
 import android.content.Context;
 
+import com.evernote.android.job.JobManager;
+
 import java.io.File;
 
+import cl.ceisufro.weathercompare.JobCreator.NetworkJobCreator;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -58,6 +61,7 @@ public class WeatherCompareApp extends android.app.Application {
         Realm.init(appContext);
         RealmConfiguration config = new RealmConfiguration.Builder().name("weatherProvidersComparison").build();
         Realm.setDefaultConfiguration(config);
+        JobManager.create(this).addJobCreator(new NetworkJobCreator());
 
     }
 

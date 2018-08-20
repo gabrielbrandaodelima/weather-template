@@ -138,7 +138,7 @@ public class OpenWeatherFragment extends Fragment implements OpenWeatherView {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         queueOpenWeather = Volley.newRequestQueue(getActivity());
-        presenter.callOpenWeatherCurrent(queueOpenWeather);
+//        presenter.callOpenWeatherCurrent(queueOpenWeather);
     }
 
     @Override

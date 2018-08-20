@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.evernote.android.job.JobManager;
+import com.evernote.android.job.JobRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -43,15 +47,28 @@ import com.johnhiott.darkskyandroidlib.models.DataBlock;
 import com.johnhiott.darkskyandroidlib.models.DataPoint;
 import com.johnhiott.darkskyandroidlib.models.WeatherResponse;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cl.ceisufro.weathercompare.JobCreator.NetworkSyncJob;
 import cl.ceisufro.weathercompare.R;
 import cl.ceisufro.weathercompare.accuweather.AccuWeatherFragment;
 import cl.ceisufro.weathercompare.alarm.AlarmFragment;
 import cl.ceisufro.weathercompare.apixu.APIXUWeatherFragment;
 import cl.ceisufro.weathercompare.darksky.DarkSkyWeatherFragment;
+import cl.ceisufro.weathercompare.models.AccuWeatherConditions;
+import cl.ceisufro.weathercompare.models.ApixuWeatherConditions;
+import cl.ceisufro.weathercompare.models.DarkSkyWeatherConditions;
+import cl.ceisufro.weathercompare.models.OpenWeatherConditions;
+import cl.ceisufro.weathercompare.models.YahooWeatherConditions;
 import cl.ceisufro.weathercompare.models.objrequisicion.AccuWeatherObject;
 import cl.ceisufro.weathercompare.models.objrequisicion.ApixuWeatherObject;
 import cl.ceisufro.weathercompare.models.objrequisicion.DarkSkyWeatherObject;
@@ -67,11 +84,10 @@ import retrofit.RetrofitError;
 
 //import cl.ceisufro.weathercompare.network.YahooWeatherRequest;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListWeatherView {
 
 
     private static final int REQUEST_CODE = 1;
-    RequestQueue queueOpenWeather = null;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.action_bar_title)
@@ -86,6 +102,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.loading_main_txt_view)
+    TextView loadingMainTxtView;
+    @BindView(R.id.loading_main_progress_layout)
+    LinearLayout loadingMainProgressLayout;
     private boolean APIXUok = false;
     private boolean YahooOk = false;
     private boolean OpenWeatherOK = false;
@@ -104,6 +124,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private AlarmManager alarmMgr;
     PendingIntent alarmIntent;
 
+    List<YahooWeatherConditions> yahooWeatherConditionsList = new ArrayList<>();
+    List<OpenWeatherConditions> openWeatherConditionsList = new ArrayList<>();
+    List<DarkSkyWeatherConditions> darkskyWeatherConditionsList = new ArrayList<>();
+    List<ApixuWeatherConditions> apixuWeatherConditionsList = new ArrayList<>();
+    List<AccuWeatherConditions> accuWeatherConditionsList = new ArrayList<>();
+    private RequestQueue queueList;
+    ListWeatherPresenter listWeatherPresenter;
+
+
+    private int mLastJobId;
+
+    private static final String LAST_JOB_ID = "LAST_JOB_ID";
+    private JobManager mJobManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +151,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         }
+
+        if (savedInstanceState != null) {
+            mLastJobId = savedInstanceState.getInt(LAST_JOB_ID, 0);
+        }
+        mJobManager = JobManager.instance();
+
         // Get a Realm instance for this thread
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -126,17 +166,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         ForecastApi.create(Utils.keyDarkSky);
 
-//        final SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putBoolean("isOn", false);
-//        editor.apply();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         Menu menu = navigationView.getMenu();
         setMainFragmentSelected();
         onNewIntent(getIntent());
-        Gson gson = new Gson();
+        queueList = Volley.newRequestQueue(getApplicationContext());
 
+        hideLayout();
+        showProgress();
 
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -165,7 +203,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+
+        listWeatherPresenter = new ListWeatherPresenterImpl(this);
+        listWeatherPresenter.listWeatherRequest(queueList);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -179,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void changeFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        mainLayout.removeAllViews();
         if (selectedFragment == yahooWeatherFragment) {
             transaction.hide(yahooWeatherFragment);
         } else {
@@ -213,7 +256,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         currentTag = YahooWeatherFragment.getFragmentTag();
 
     }
-
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(LAST_JOB_ID, mLastJobId);
+    }
 
     @Override
     protected void onPostResume() {
@@ -238,12 +285,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onStart() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+
+        }
+
         super.onStart();
 
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(String event) {
+        if (event.equals("setJob")) {
+
+            mLastJobId = new JobRequest.Builder(NetworkSyncJob.TAG)
+                    .setPeriodic(JobRequest.MIN_INTERVAL, JobRequest.MIN_FLEX)
+                    .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                    .build()
+                    .schedule();
+
+        } else if (event.equals("cancelJob")) {
+
+            mJobManager.cancelAll();
+        }
+
+    }
+
+
     @Override
     protected void onStop() {
+
         super.onStop();
 
     }
@@ -361,6 +433,89 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    @Override
+    public void showError(String error) {
+        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+
+
+    }
+
+    @Override
+    public void displayLayout() {
+
+        hideProgress();
+        showLayout();
+    }
+
+    @Override
+    public void showProgress() {
+        if (loadingMainProgressLayout.getVisibility() == View.GONE) {
+
+            loadingMainProgressLayout.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    @Override
+    public void hideProgress() {
+        if (loadingMainProgressLayout.getVisibility() == View.VISIBLE) {
+
+            loadingMainProgressLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void showLayout() {
+        mainLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLayout() {
+
+        mainLayout.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void populateWeatherObjects(String response) {
+//        JsonParser parser = new JsonParser();
+//        JsonObject json = (JsonObject) parser.parse(response);
+//
+//        JsonArray weatherList = json.get("data").getAsJsonArray();
+//
+//        for (JsonElement weatherObj :
+//                weatherList) {
+//            JsonObject weathObj = weatherObj.getAsJsonObject();
+//
+//        }
+
+//        JsonObject jsonObjectForecast = json.get("query").getAsJsonObject().get("results").getAsJsonObject().get("channel").getAsJsonObject();
+//        JsonObject actualCondition = jsonObjectForecast.get("item").getAsJsonObject().get("condition").getAsJsonObject();
+//        JsonElement actualCode = actualCondition.get("code");
+//        JsonElement actualTemp = actualCondition.get("temp");
+//        JsonElement actualText = actualCondition.get("text");
+//        JsonElement actualDate = actualCondition.get("date");
+//        JsonArray forecastArraylist = jsonObjectForecast.get("item").getAsJsonObject().get("forecast").getAsJsonArray();
+//        for (JsonElement yahooDayForecast :
+//                forecastArraylist) {
+//            JsonElement code = yahooDayForecast.getAsJsonObject().get("code");
+//            JsonElement date = yahooDayForecast.getAsJsonObject().get("date");
+//            JsonElement day = yahooDayForecast.getAsJsonObject().get("day");
+//            JsonElement high = yahooDayForecast.getAsJsonObject().get("high");
+//            JsonElement low = yahooDayForecast.getAsJsonObject().get("low");
+//            JsonElement text = yahooDayForecast.getAsJsonObject().get("text");
+//            YahooWeatherConditions yahooWeatherForecast = new YahooWeatherConditions(date.getAsString(), day.getAsString(), text.getAsString(), code.getAsInt(), high.getAsInt(), low.getAsInt());
+//        }
+//
+//
+//        JsonElement todayTempHigh = forecastArraylist.get(0).getAsJsonObject().get("high");
+//        JsonElement todayTempLow = forecastArraylist.get(0).getAsJsonObject().get("low");
+//        YahooWeatherConditions todayYahooWeatherCondition = new YahooWeatherConditions(actualDate.getAsString(), actualText.getAsString(), actualCode.getAsInt(), actualTemp.getAsInt(), todayTempHigh.getAsInt(), todayTempLow.getAsInt());
+
+        displayLayout();
+
+    }
+
     public static class CallReceiver extends BroadcastReceiver {
         private YahooWeatherObject yahooWeatherObject = null;
         private AccuWeatherObject accuWeatherObject = null;
@@ -415,7 +570,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     yahooWeatherObject.settActual(actualTemp.getAsFloat());
                     yahooWeatherObject.settMin(todayTempLow.getAsFloat());
                     yahooWeatherObject.settMax(todayTempHigh.getAsFloat());
-                    yahooWeatherObject.setPresion(actualPresion.getAsFloat());
+
+                    double pressionInMb = Utils.convertYahooPressureMistake(actualPresion.getAsFloat());
+
+                    yahooWeatherObject.setPresion((float) pressionInMb);
                     yahooWeatherObject.setHumedad(actualHumedad.getAsInt());
 
                     if (yahooWeatherObject != null) {

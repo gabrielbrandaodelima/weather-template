@@ -3,13 +3,12 @@ package cl.ceisufro.weathercompare.main;
 
 public interface ListWeatherView {
     void showError(String error);
-    void displayWeather();
+    void displayLayout();
 
-
-    void populateWeatherList(Object response);
 
     void showProgress();
     void hideProgress();
     void showLayout();
     void hideLayout();
+    void populateWeatherObjects(String response);
 }

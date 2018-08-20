@@ -10,11 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import cl.ceisufro.weathercompare.utils.Utils;
-import cl.ceisufro.weathercompare.utils.constants.Constants;
 
 public class ListWeatherInteractorImp implements ListWeatherInteractor {
 
@@ -33,18 +29,18 @@ public class ListWeatherInteractorImp implements ListWeatherInteractor {
 
         String url = Utils.LINK_API_CLIMA;
 
-        final JSONObject urlList = new JSONObject();
-        try {
-            urlList.put("usr", Constants.USR);
-            urlList.put("pass", Constants.PASS);
-            urlList.put("action", Constants.ACTION_LIST);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        final JSONObject urlList = new JSONObject();
+//        try {
+//            urlList.put("usr", Constants.USR);
+//            urlList.put("pass", Constants.PASS);
+//            urlList.put("action", Constants.ACTION_LIST);
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
         Gson gson = new Gson();
-        if (urlList.length() != 0) {
-            final String urlObjString = gson.toJson(urlList);
+//        if (urlList.length() != 0) {
+            final String urlObjString = "{\"usr\":\"appuser\",\"pass\":\"appuser.2018\",\"action\":\"list\"}";
 
 
             StringRequest postRequest = new StringRequest(Request.Method.POST, url,
@@ -83,7 +79,7 @@ public class ListWeatherInteractorImp implements ListWeatherInteractor {
             };
 // Add the request to the RequestQueue.
             queue.add(postRequest);
-        }
+//        }
 
     }
 }

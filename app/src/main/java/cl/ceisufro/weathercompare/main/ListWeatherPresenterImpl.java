@@ -20,8 +20,8 @@ public class ListWeatherPresenterImpl implements ListWeatherPresenter, ListWeath
 
 
     @Override
-    public void onSuccess(Object response) {
-        listWeatherView.populateWeatherList(response);
+    public void onSuccess(String response) {
+        listWeatherView.populateWeatherObjects(response);
 
     }
 

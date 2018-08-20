@@ -13,6 +13,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -69,6 +71,9 @@ public class AlarmFragment extends Fragment {
         final SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         isOn = sharedPreferences.getBoolean("isOn", false);
         final Alarm alarm = new Alarm();
+
+
+
         if (isOn) {
 
 
@@ -92,7 +97,11 @@ public class AlarmFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    alarm.setAlarm(getActivity(), 0);
+//                    alarm.setAlarm(getActivity(), 0);
+                    EventBus.getDefault().postSticky("setJob");
+
+
+
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("isOn", true);
                     editor.apply();
@@ -104,7 +113,10 @@ public class AlarmFragment extends Fragment {
 
 
                 } else {
-                    alarm.cancelAlarm(getActivity(), 0);
+//                    alarm.cancelAlarm(getActivity(), 0);
+
+                    EventBus.getDefault().postSticky("cancelJob");
+
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("isOn", false);
                     editor.apply();
