@@ -1,7 +1,6 @@
 package cl.ceisufro.weathercompare.JobCreator;
 
 import android.content.Context;
-import android.os.PowerManager;
 import android.support.annotation.NonNull;
 
 import com.android.volley.Request;
@@ -12,14 +11,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.evernote.android.job.Job;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.johnhiott.darkskyandroidlib.RequestBuilder;
-import com.johnhiott.darkskyandroidlib.models.DataBlock;
-import com.johnhiott.darkskyandroidlib.models.DataPoint;
 import com.johnhiott.darkskyandroidlib.models.WeatherResponse;
+
+import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
@@ -27,6 +22,7 @@ import cl.ceisufro.weathercompare.models.objrequisicion.AccuWeatherObject;
 import cl.ceisufro.weathercompare.models.objrequisicion.ApixuWeatherObject;
 import cl.ceisufro.weathercompare.models.objrequisicion.DarkSkyWeatherObject;
 import cl.ceisufro.weathercompare.models.objrequisicion.OpenWeatherObject;
+import cl.ceisufro.weathercompare.models.objrequisicion.PromedioObject;
 import cl.ceisufro.weathercompare.models.objrequisicion.YahooWeatherObject;
 import cl.ceisufro.weathercompare.network.OnPostRequestCallback;
 import cl.ceisufro.weathercompare.network.POSTObjectRequest;
@@ -57,36 +53,36 @@ public class NetworkSyncJob extends Job {
     protected Result onRunJob(Params params) {
         // run your job here
 
-//        POSTObjectRequest postObjectRequest = new POSTObjectRequest();
-//        RequestQueue queue = Volley.newRequestQueue(getContext());
-//
-//
-//        Gson gson = new Gson();
-//        PromedioObject promedioObject = new PromedioObject();
-//        promedioObject.setFechahora(Calendar.getInstance().getTime().toString());
-//        promedioObject.setPromedioTempActual(13.2f);
-//        promedioObject.setPromedioTempMax(13.2f);
-//        promedioObject.setPromedioTempMin(1.2f);
-//        promedioObject.setPromedioPresion(11.2f);
-//        promedioObject.setPromedioHumedad(13);
-//        promedioObject.setPromedioVviento(23.2f);
-//
-//        String promedioObjectString = gson.toJson(promedioObject);
-//
-//        postObjectRequest.sendPromedioRequest(queue, promedioObjectString, new OnPostRequestCallback() {
-//            @Override
-//            public void onSuccess(String response) {
+        POSTObjectRequest postObjectRequest = new POSTObjectRequest();
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+
+
+        Gson gson = new Gson();
+        PromedioObject promedioObject = new PromedioObject();
+        promedioObject.setFechahora("TESTE CELU: "+Calendar.getInstance().getTime().toString());
+        promedioObject.setPromedioTempActual(1.2f);
+        promedioObject.setPromedioTempMax(13.2f);
+        promedioObject.setPromedioTempMin(-51.2f);
+        promedioObject.setPromedioPresion(11.2f);
+        promedioObject.setPromedioHumedad(13);
+        promedioObject.setPromedioVviento(23.2f);
+
+        String promedioObjectString = gson.toJson(promedioObject);
+
+        postObjectRequest.sendPromedioRequest(queue, promedioObjectString, new OnPostRequestCallback() {
+            @Override
+            public void onSuccess(String response) {
 //                Log.e("response", response);
-//            }
-//
-//            @Override
-//            public void onFailure(@Nullable String error) {
-//
-//            }
-//        });
+            }
+
+            @Override
+            public void onFailure(@Nullable String error) {
+
+            }
+        });
 
 //        Toast.makeText(getContext(), "JOB EXECUTADOOOOOO", Toast.LENGTH_LONG).show();
-
+/*
         PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
         wl.acquire();
@@ -119,7 +115,7 @@ public class NetworkSyncJob extends Job {
                 yahooWeatherObject = new YahooWeatherObject();
                 yahooWeatherObject.setCondActualDia(actualCondDia.getAsString());
                 yahooWeatherObject.setCondDia(condDia.getAsString());
-                yahooWeatherObject.setFechahoraConsulta(actualDate.getAsString());
+                yahooWeatherObject.setFechahoraConsulta(Calendar.getInstance().getTime().toString());
                 yahooWeatherObject.setvViento(actualvViento.getAsFloat());
                 yahooWeatherObject.settActual(actualTemp.getAsFloat());
                 yahooWeatherObject.settMin(todayTempLow.getAsFloat());
@@ -196,7 +192,7 @@ public class NetworkSyncJob extends Job {
                 openWeatherObject.setPresion(presion.getAsFloat());
                 openWeatherObject.setHumedad(humedad.getAsInt());
                 openWeatherObject.setvViento(vViento.getAsFloat());
-                openWeatherObject.setFechahoraConsulta(dateTodayString);
+                openWeatherObject.setFechahoraConsulta(Calendar.getInstance().getTime().toString());
                 if (openWeatherObject != null) {
 
                     POSTObjectRequest postObjectRequest = new POSTObjectRequest();
@@ -253,7 +249,7 @@ public class NetworkSyncJob extends Job {
                 JsonElement condDia = forecast.get(0).getAsJsonObject().get("day").getAsJsonObject().get("condition").getAsJsonObject().get("text");
 
                 apixuWeatherObject = new ApixuWeatherObject();
-                apixuWeatherObject.setFechahoraConsulta(fechaHora.getAsString());
+                apixuWeatherObject.setFechahoraConsulta(Calendar.getInstance().getTime().toString());
                 apixuWeatherObject.settActual(tActual.getAsFloat());
                 apixuWeatherObject.setvViento(vViento.getAsFloat());
                 apixuWeatherObject.setPresion(presion.getAsFloat());
@@ -343,7 +339,7 @@ public class NetworkSyncJob extends Job {
                         accuWeatherObject.setCondDia(condDia.getAsString());
                         accuWeatherObject.setCondNoche(condNoche.getAsString());
 
-                        accuWeatherObject.setFechahoraConsulta(dateTodayString);
+                        accuWeatherObject.setFechahoraConsulta(Calendar.getInstance().getTime().toString());
                         accuWeatherObject.settActual(tActual.getAsFloat());
                         accuWeatherObject.setHumedad(humedad.getAsInt());
                         accuWeatherObject.setPresion(presion.getAsFloat());
@@ -435,7 +431,7 @@ public class NetworkSyncJob extends Job {
 
 
                 String dateTodayString = Utils.getDateAndHourString(fecha);
-                darkSkyWeatherObject.setFechahoraConsulta(dateTodayString);
+                darkSkyWeatherObject.setFechahoraConsulta(Calendar.getInstance().getTime().toString());
                 darkSkyWeatherObject.setCondActualDia(condActualDia);
                 darkSkyWeatherObject.settActual(tActual);
                 darkSkyWeatherObject.setHumedad(humedad);
@@ -479,6 +475,7 @@ public class NetworkSyncJob extends Job {
 
 
         wl.release();
+        */
 
 
         return Result.SUCCESS;

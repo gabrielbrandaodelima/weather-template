@@ -299,9 +299,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onEvent(String event) {
         if (event.equals("setJob")) {
 
+            new JobRequest.Builder(NetworkSyncJob.TAG)
+                    .startNow()
+                    .build()
+                    .schedule();
             mLastJobId = new JobRequest.Builder(NetworkSyncJob.TAG)
                     .setPeriodic(JobRequest.MIN_INTERVAL, JobRequest.MIN_FLEX)
-                    .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
                     .build()
                     .schedule();
 
