@@ -51,6 +51,7 @@ import cl.ceisufro.weathercompare.models.DarkSkyWeatherConditions;
 import cl.ceisufro.weathercompare.models.OpenWeatherConditions;
 import cl.ceisufro.weathercompare.models.YahooWeatherConditions;
 import cl.ceisufro.weathercompare.openweather.OpenWeatherFragment;
+import cl.ceisufro.weathercompare.promedio.PromedioWeatherFragment;
 import cl.ceisufro.weathercompare.utils.Utils;
 import cl.ceisufro.weathercompare.yahoo.YahooWeatherFragment;
 
@@ -151,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         onNewIntent(getIntent());
         queueList = Volley.newRequestQueue(getApplicationContext());
 
-        hideLayout();
-        showProgress();
+//        hideLayout();
+//        showProgress();
 
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -182,8 +183,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
 
-        listWeatherPresenter = new ListWeatherPresenterImpl(this);
-        listWeatherPresenter.listWeatherRequest(queueList);
     }
 
 
@@ -335,6 +334,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             actionBarTitle.setText("APIXU");
             navigationView.getMenu().findItem(R.id.nav_apixu).setChecked(true);
 
+        } else if (currentTag.equals(APIXUWeatherFragment.getFragmentTag())) {
+            actionBarTitle.setText("APIXU");
+            navigationView.getMenu().findItem(R.id.nav_apixu).setChecked(true);
+
+        } else if (currentTag.equals(PromedioWeatherFragment.getFragmentTag())) {
+            actionBarTitle.setText("Promedios");
+            navigationView.getMenu().findItem(R.id.nav_promedios).setChecked(true);
+
         } else if (currentTag.equals(AlarmFragment.getFragmentTag())) {
             actionBarTitle.setText("Requisición Periodica");
             navigationView.getMenu().findItem(R.id.nav_alarm).setChecked(true);
@@ -355,11 +362,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (!currentTag.equals(YahooWeatherFragment.getFragmentTag())) {
 
                 mFragmentToSet = new YahooWeatherFragment();
-//                Bundle args = new Bundle();
-//                args.putBoolean("isMain", true);
-//                mFragmentToSet.setArguments(args);
                 currentTag = YahooWeatherFragment.getFragmentTag();
-//                callYahooWeather(); // nuestro servidor
             }
 
         } else if (id == R.id.nav_open) {
@@ -368,7 +371,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (!currentTag.equals(OpenWeatherFragment.getFragmentTag())) {
                 mFragmentToSet = new OpenWeatherFragment();
                 currentTag = OpenWeatherFragment.getFragmentTag();
-//                callOpenWeather(queueOpenWeather);
             }
 
         } else if (id == R.id.nav_dark) {
@@ -378,19 +380,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (!currentTag.equals(DarkSkyWeatherFragment.getFragmentTag())) {
                 mFragmentToSet = new DarkSkyWeatherFragment();
                 currentTag = DarkSkyWeatherFragment.getFragmentTag();
-//                    callDarkSky();
             }
 
 
         } else if (id == R.id.nav_accu) {
 
-//            createDialogDev();
-//            alertDialog.show();
             actionBarTitle.setText("AccuWeather");
             if (!currentTag.equals(AccuWeatherFragment.getFragmentTag())) {
                 mFragmentToSet = new AccuWeatherFragment();
                 currentTag = AccuWeatherFragment.getFragmentTag();
-//                callAccuWeather();
 
             }
 
@@ -400,7 +398,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (!currentTag.equals(APIXUWeatherFragment.getFragmentTag())) {
                 mFragmentToSet = new APIXUWeatherFragment();
                 currentTag = APIXUWeatherFragment.getFragmentTag();
-//                callAPIXUWeather();
+            }
+
+        }  else if (id == R.id.nav_promedios) {
+
+            actionBarTitle.setText("Promedios");
+            if (!currentTag.equals(PromedioWeatherFragment.getFragmentTag())) {
+                mFragmentToSet = new PromedioWeatherFragment();
+                currentTag = PromedioWeatherFragment.getFragmentTag();
             }
 
         } else if (id == R.id.nav_alarm) {

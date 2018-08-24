@@ -25,7 +25,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,8 +32,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cl.ceisufro.weathercompare.R;
 import cl.ceisufro.weathercompare.accuweather.adapter.AccuWeatherAdapter;
-import cl.ceisufro.weathercompare.models.AccuWeatherConditions;
-import cl.ceisufro.weathercompare.utils.Utils;
+import cl.ceisufro.weathercompare.main.ListWeatherPresenter;
+import cl.ceisufro.weathercompare.main.ListWeatherPresenterImpl;
+import cl.ceisufro.weathercompare.models.objrequisicion.WeatherObject;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -58,15 +58,15 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
     ImageView listItemTodayIcon;
     @BindView(R.id.list_item_today_forecast_textview)
     TextView listItemTodayForecastTextview;
-    AccuWeatherPresenter presenter;
-    List<AccuWeatherConditions> accuWeatherConditionsArrayList;
-    List<AccuWeatherConditions> accuWeatherConditionsNextDaysArrayList;
-    AccuWeatherConditions todayAccuWeatherCondition = new AccuWeatherConditions();
+    ListWeatherPresenter presenter;
+    List<WeatherObject> accuWeatherConditionsArrayList;
+    List<WeatherObject> accuWeatherConditionsNextDaysArrayList;
+    WeatherObject todayAccuWeatherCondition = new WeatherObject();
     AccuWeatherAdapter accuWeatherAdapter;
     Realm realm;
     RequestQueue queueAccuWeather = null;
 
-    RealmResults<AccuWeatherConditions> accuWeatherConditionsRealmResults;
+    RealmResults<WeatherObject> accuWeatherConditionsRealmResults;
     @BindView(R.id.list_item_today_current_textview)
     TextView listItemTodayCurrentTextview;
     private Integer currentTemp = null;
@@ -92,7 +92,7 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
         realm = Realm.getDefaultInstance();
 
         // Obtain the cities in the Realm with asynchronous query.
-        accuWeatherConditionsRealmResults = realm.where(AccuWeatherConditions.class).findAllAsync();
+        accuWeatherConditionsRealmResults = realm.where(WeatherObject.class).findAllAsync();
 
         // The RealmChangeListener will be called when the results are asynchronously loaded, and available for use.
 //        accuWeatherConditionsRealmResults.addChangeListener(realmChangeListener);
@@ -108,7 +108,7 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
         hideLayout();
         showProgress();
 
-        presenter = new AccuWeatherPresenterImpl(this);
+        presenter = new ListWeatherPresenterImpl(this);
         accuWeatherConditionsArrayList = new ArrayList<>();
         accuWeatherConditionsNextDaysArrayList = new ArrayList<>();
 //        initAdapter();
@@ -119,6 +119,7 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         queueAccuWeather = Volley.newRequestQueue(getActivity());
+        presenter.listWeatherRequest(queueAccuWeather, 4);
 //        presenter.callAccuWeatherCurrent(queueAccuWeather);
     }
 
@@ -154,6 +155,11 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
     }
 
     @Override
+    public void displayLayout() {
+        
+    }
+
+    @Override
     public void displayWeather() {
 
         hideProgress();
@@ -162,144 +168,144 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
 
     @Override
     public void populateWeatherList(String response) {
-        JsonParser parser = new JsonParser();
-        JsonObject json = (JsonObject) parser.parse(response);
-
-        JsonArray jsonArrayForecast = json.get("DailyForecasts").getAsJsonArray();
-
-        for (JsonElement accuWeatherDateCondition :
-                jsonArrayForecast) {
-            JsonElement dateInTimestamp = accuWeatherDateCondition.getAsJsonObject().get("EpochDate");
-            JsonElement tempMin = accuWeatherDateCondition.getAsJsonObject().get("Temperature").getAsJsonObject().get("Minimum").getAsJsonObject().get("Value");
-            JsonElement tempMax = accuWeatherDateCondition.getAsJsonObject().get("Temperature").getAsJsonObject().get("Maximum").getAsJsonObject().get("Value");
-            JsonElement dayPhrase = accuWeatherDateCondition.getAsJsonObject().get("Day").getAsJsonObject().get("IconPhrase");
-            JsonElement nightPhrase = accuWeatherDateCondition.getAsJsonObject().get("Night").getAsJsonObject().get("IconPhrase");
-
-
-            AccuWeatherConditions accuWeatherConditions = new AccuWeatherConditions(dateInTimestamp.getAsInt(), tempMax.getAsInt(), tempMin.getAsInt(), dayPhrase.getAsString(), nightPhrase.getAsString());
-
-
-            accuWeatherConditionsArrayList.add(accuWeatherConditions);
-
-        }
-        todayAccuWeatherCondition = accuWeatherConditionsArrayList.get(0);
-
-        todayAccuWeatherCondition.setCurrentTemp(currentTemp);
-        int dateInTimestamp = todayAccuWeatherCondition.getDate();
-        Date dateToday = Utils.getDate(dateInTimestamp);
-        String dateTodayString = Utils.getDateString(dateInTimestamp);
-
-        if (listItemTodayCurrentTextview != null) {
-            listItemTodayDateTextview.setText(dateTodayString);
-            listItemTodayCurrentTextview.setText(todayAccuWeatherCondition.getCurrentTemp() + "ºC");
-            listItemTodayForecastTextview.setText(todayAccuWeatherCondition.getDayPhrase());
-            listItemTodayHighTextview.setText(Math.round(todayAccuWeatherCondition.getTempMax()) + "ºC");
-            listItemTodayLowTextview.setText(Math.round(todayAccuWeatherCondition.getTempMin()) + "ºC");
-
-        }
-        switch (todayAccuWeatherCondition.getDayPhrase()) {
-            case "Sunny":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
-
-                break;
-            case "Clear":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
-
-                break;
-            case "Mostly clear":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
-
-                break;
-            case "Mostly sunny":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
-
-                break;
-            case "Partly sunny":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
-
-                break;
-            case "Intermittent clouds":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
-
-                break;
-            case "Hazy sunshine":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
-
-                break;
-            case "Mostly cloudy":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
-
-                break;
-            case "Cloudy":
-                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
-
-                break;
-            case "Few clouds":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
-
-                break;
-            case "Snow":
-                listItemTodayIcon.setImageResource(R.drawable.art_snow);
-
-                break;
-            case "Mostly Cloudy w/ Snow":
-                listItemTodayIcon.setImageResource(R.drawable.art_snow);
-
-                break;
-            case "Fog":
-                listItemTodayIcon.setImageResource(R.drawable.art_fog);
-
-                break;
-            case "T-Storms":
-                listItemTodayIcon.setImageResource(R.drawable.art_storm);
-
-                break;
-            case "Mostly Cloudy w/ T-Storms":
-                listItemTodayIcon.setImageResource(R.drawable.art_storm);
-
-                break;
-            case "Partly Sunny w/ T-Storms":
-                listItemTodayIcon.setImageResource(R.drawable.art_storm);
-
-                break;
-            case "Mostly Cloudy w/ Showers":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
-
-                break;
-
-            case "Partly Sunny w/ Showers":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
-                break;
-
-            case "Scattered Showers":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
-                break;
-            case "Showers":
-                listItemTodayIcon.setImageResource(R.drawable.art_rain);
-                break;
-            case "Rain":
-                listItemTodayIcon.setImageResource(R.drawable.art_rain);
-                break;
-            default:
-                break;
-
-        }
-        accuWeatherConditionsNextDaysArrayList = accuWeatherConditionsArrayList.subList(1, accuWeatherConditionsArrayList.size());
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(RecyclerView.VERTICAL);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        accuWeatherAdapter = new AccuWeatherAdapter(getActivity(), accuWeatherConditionsNextDaysArrayList);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
-                layoutManager.getOrientation());
-        forecastRecycle.addItemDecoration(dividerItemDecoration);
-        forecastRecycle.setLayoutManager(layoutManager);
-        forecastRecycle.setNestedScrollingEnabled(false);
-        forecastRecycle.setLayoutParams(layoutParams);
-        forecastRecycle.setAdapter(accuWeatherAdapter);
-
-
-        displayWeather();
+//        JsonParser parser = new JsonParser();
+//        JsonObject json = (JsonObject) parser.parse(response);
+//
+//        JsonArray jsonArrayForecast = json.get("DailyForecasts").getAsJsonArray();
+//
+//        for (JsonElement accuWeatherDateCondition :
+//                jsonArrayForecast) {
+//            JsonElement dateInTimestamp = accuWeatherDateCondition.getAsJsonObject().get("EpochDate");
+//            JsonElement tempMin = accuWeatherDateCondition.getAsJsonObject().get("Temperature").getAsJsonObject().get("Minimum").getAsJsonObject().get("Value");
+//            JsonElement tempMax = accuWeatherDateCondition.getAsJsonObject().get("Temperature").getAsJsonObject().get("Maximum").getAsJsonObject().get("Value");
+//            JsonElement dayPhrase = accuWeatherDateCondition.getAsJsonObject().get("Day").getAsJsonObject().get("IconPhrase");
+//            JsonElement nightPhrase = accuWeatherDateCondition.getAsJsonObject().get("Night").getAsJsonObject().get("IconPhrase");
+//
+//
+//            WeatherObject accuWeatherConditions = new WeatherObject(dateInTimestamp.getAsInt(), tempMax.getAsInt(), tempMin.getAsInt(), dayPhrase.getAsString(), nightPhrase.getAsString());
+//
+//
+//            accuWeatherConditionsArrayList.add(accuWeatherConditions);
+//
+//        }
+//        todayAccuWeatherCondition = accuWeatherConditionsArrayList.get(0);
+//
+//        todayAccuWeatherCondition.setCurrentTemp(currentTemp);
+//        int dateInTimestamp = todayAccuWeatherCondition.getDate();
+//        Date dateToday = Utils.getDate(dateInTimestamp);
+//        String dateTodayString = Utils.getDateString(dateInTimestamp);
+//
+//        if (listItemTodayCurrentTextview != null) {
+//            listItemTodayDateTextview.setText(dateTodayString);
+//            listItemTodayCurrentTextview.setText(todayAccuWeatherCondition.getCurrentTemp() + "ºC");
+//            listItemTodayForecastTextview.setText(todayAccuWeatherCondition.getDayPhrase());
+//            listItemTodayHighTextview.setText(Math.round(todayAccuWeatherCondition.getTempMax()) + "ºC");
+//            listItemTodayLowTextview.setText(Math.round(todayAccuWeatherCondition.getTempMin()) + "ºC");
+//
+//        }
+//        switch (todayAccuWeatherCondition.getDayPhrase()) {
+//            case "Sunny":
+//                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+//
+//                break;
+//            case "Clear":
+//                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+//
+//                break;
+//            case "Mostly clear":
+//                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+//
+//                break;
+//            case "Mostly sunny":
+//                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+//
+//                break;
+//            case "Partly sunny":
+//                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+//
+//                break;
+//            case "Intermittent clouds":
+//                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+//
+//                break;
+//            case "Hazy sunshine":
+//                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+//
+//                break;
+//            case "Mostly cloudy":
+//                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+//
+//                break;
+//            case "Cloudy":
+//                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
+//
+//                break;
+//            case "Few clouds":
+//                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+//
+//                break;
+//            case "Snow":
+//                listItemTodayIcon.setImageResource(R.drawable.art_snow);
+//
+//                break;
+//            case "Mostly Cloudy w/ Snow":
+//                listItemTodayIcon.setImageResource(R.drawable.art_snow);
+//
+//                break;
+//            case "Fog":
+//                listItemTodayIcon.setImageResource(R.drawable.art_fog);
+//
+//                break;
+//            case "T-Storms":
+//                listItemTodayIcon.setImageResource(R.drawable.art_storm);
+//
+//                break;
+//            case "Mostly Cloudy w/ T-Storms":
+//                listItemTodayIcon.setImageResource(R.drawable.art_storm);
+//
+//                break;
+//            case "Partly Sunny w/ T-Storms":
+//                listItemTodayIcon.setImageResource(R.drawable.art_storm);
+//
+//                break;
+//            case "Mostly Cloudy w/ Showers":
+//                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+//
+//                break;
+//
+//            case "Partly Sunny w/ Showers":
+//                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+//                break;
+//
+//            case "Scattered Showers":
+//                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+//                break;
+//            case "Showers":
+//                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+//                break;
+//            case "Rain":
+//                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+//                break;
+//            default:
+//                break;
+//
+//        }
+//        accuWeatherConditionsNextDaysArrayList = accuWeatherConditionsArrayList.subList(1, accuWeatherConditionsArrayList.size());
+//        LinearLayoutManager layoutManager =
+//                new LinearLayoutManager(getActivity());
+//        layoutManager.setOrientation(RecyclerView.VERTICAL);
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//        accuWeatherAdapter = new AccuWeatherAdapter(getActivity(), accuWeatherConditionsNextDaysArrayList);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
+//                layoutManager.getOrientation());
+//        forecastRecycle.addItemDecoration(dividerItemDecoration);
+//        forecastRecycle.setLayoutManager(layoutManager);
+//        forecastRecycle.setNestedScrollingEnabled(false);
+//        forecastRecycle.setLayoutParams(layoutParams);
+//        forecastRecycle.setAdapter(accuWeatherAdapter);
+//
+//
+//        displayWeather();
     }
 
     @Override
@@ -332,13 +338,185 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
     }
 
     @Override
-    public void getCurrentTemp(String response) {
+    public void populateWeatherObjects(String response) {
         JsonParser parser = new JsonParser();
-        JsonArray json = (JsonArray) parser.parse(response);
-        JsonElement temp = json.get(0).getAsJsonObject().get("Temperature").getAsJsonObject().get("Metric").getAsJsonObject().get("Value");
+        JsonObject json = (JsonObject) parser.parse(response);
 
-        currentTemp = temp.getAsInt();
-        presenter.callAccuWeather(queueAccuWeather);
+        JsonArray jsonArray = json.get("data").getAsJsonArray();
+
+        for (JsonElement element :
+                jsonArray) {
+            String fechahoraConsulta = element.getAsJsonObject().get("fechahoraConsulta").getAsString();
+            String condActualDia = element.getAsJsonObject().get("condActualDia").getAsString();
+            String condActualNoche = element.getAsJsonObject().get("condActualNoche").getAsString();
+            String condDia = element.getAsJsonObject().get("condDia").getAsString();
+            String condNoche = element.getAsJsonObject().get("condNoche").getAsString();
+            float tActual = element.getAsJsonObject().get("tActual").getAsFloat();
+            float tMax = element.getAsJsonObject().get("tMax").getAsFloat();
+            float tMin = element.getAsJsonObject().get("tMin").getAsFloat();
+            float presion = element.getAsJsonObject().get("presion").getAsFloat();
+            int humedad = element.getAsJsonObject().get("humedad").getAsInt();
+            float vViento = element.getAsJsonObject().get("vViento").getAsFloat();
+            WeatherObject darkSkyWeatherObject = new WeatherObject();
+            darkSkyWeatherObject.setFechahoraConsulta(fechahoraConsulta);
+            darkSkyWeatherObject.settActual(tActual);
+            darkSkyWeatherObject.settMax(tMax);
+            darkSkyWeatherObject.settMin(tMin);
+            darkSkyWeatherObject.setPresion(presion);
+            darkSkyWeatherObject.setHumedad(humedad);
+            darkSkyWeatherObject.setvViento(vViento);
+
+            if (!condActualDia.isEmpty()) {
+                darkSkyWeatherObject.setCondActualDia(condActualDia);
+
+            }
+            if (!condActualNoche.isEmpty()) {
+                darkSkyWeatherObject.setCondActualNoche(condActualNoche);
+
+            }
+            if (!condDia.isEmpty()) {
+                darkSkyWeatherObject.setCondDia(condDia);
+
+            }
+            if (!condNoche.isEmpty()) {
+                darkSkyWeatherObject.setCondNoche(condNoche);
+
+            }
+
+            accuWeatherConditionsArrayList.add(0,darkSkyWeatherObject);
+        }
+        WeatherObject lastWeatherObject = new WeatherObject();
+        lastWeatherObject = accuWeatherConditionsArrayList.get(0);
+        if (listItemTodayDateTextview != null) {
+
+            listItemTodayDateTextview.setText(lastWeatherObject.getFechahoraConsulta());
+            listItemTodayForecastTextview.setText(lastWeatherObject.getCondDia());
+            listItemTodayCurrentTextview.setText(lastWeatherObject.gettActual()+"ºC");
+            listItemTodayHighTextview.setText(lastWeatherObject.gettMax()+"ºC");
+            listItemTodayLowTextview.setText(lastWeatherObject.gettMin()+"ºC");
+        }
+        switch (lastWeatherObject.getCondDia()) {
+            case "Soleado":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+
+                break;
+            case "Mayormente soleado":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+
+                break;
+            case "Mostly clear":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+
+                break;
+            case "Mostly sunny":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+
+                break;
+            case "Parcialmente soleado":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+
+                break;
+            case "Nubes intermitentes":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+
+                break;
+            case "Hazy sunshine":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+
+                break;
+            case "Mostly cloudy":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+
+                break;
+            case "Cloudy":
+                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
+
+                break;
+            case "Few clouds":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+
+                break;
+            case "Snow":
+                listItemTodayIcon.setImageResource(R.drawable.art_snow);
+
+                break;
+            case "Mostly cloudy w/ snow":
+                listItemTodayIcon.setImageResource(R.drawable.art_snow);
+
+                break;
+            case "Fog":
+                listItemTodayIcon.setImageResource(R.drawable.art_fog);
+
+                break;
+            case "T-Storms":
+                listItemTodayIcon.setImageResource(R.drawable.art_storm);
+
+                break;
+            case "Mostly cloudy w/ T-Storms":
+                listItemTodayIcon.setImageResource(R.drawable.art_storm);
+
+                break;
+            case "Partly sunny w/ T-Storms":
+                listItemTodayIcon.setImageResource(R.drawable.art_storm);
+
+                break;
+            case "Mostly cloudy w/ Showers":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+
+                break;
+
+            case "Partly sunny w/ Showers":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+                break;
+
+            case "Scattered showers":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+                break;
+            case "Chaparrones":
+                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+                break;
+            case "Lluvias":
+                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+                break;
+            case "Mayormente nublado con chaparrones":
+                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+                break;
+            case "Mayormente nublado":
+                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
+                break;
+            default:
+                break;
+
+        }
+
+        accuWeatherConditionsNextDaysArrayList = accuWeatherConditionsArrayList.subList(1, accuWeatherConditionsArrayList.size());
+
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        accuWeatherAdapter = new AccuWeatherAdapter(getActivity(), accuWeatherConditionsNextDaysArrayList);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
+                layoutManager.getOrientation());
+        forecastRecycle.addItemDecoration(dividerItemDecoration);
+        forecastRecycle.setLayoutManager(layoutManager);
+        forecastRecycle.setNestedScrollingEnabled(false);
+        forecastRecycle.setLayoutParams(layoutParams);
+        forecastRecycle.setAdapter(accuWeatherAdapter);
+
+
+        displayWeather();
+
+    }
+
+    @Override
+    public void getCurrentTemp(String response) {
+//        JsonParser parser = new JsonParser();
+//        JsonArray json = (JsonArray) parser.parse(response);
+//        JsonElement temp = json.get(0).getAsJsonObject().get("Temperature").getAsJsonObject().get("Metric").getAsJsonObject().get("Value");
+//
+//        currentTemp = temp.getAsInt();
+//        presenter.callAccuWeather(queueAccuWeather);
     }
 
 

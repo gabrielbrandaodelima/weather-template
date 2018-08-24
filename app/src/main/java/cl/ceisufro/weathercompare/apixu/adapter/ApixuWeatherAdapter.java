@@ -16,21 +16,20 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.models.ApixuWeatherConditions;
-import cl.ceisufro.weathercompare.utils.Utils;
+import cl.ceisufro.weathercompare.models.objrequisicion.WeatherObject;
 
 public class ApixuWeatherAdapter extends RecyclerView.Adapter<ApixuWeatherAdapter.ViewHolder> {
 
     private Context mContext;
 
-    private List<ApixuWeatherConditions> apixuWeatherConditionsList;
+    private List<WeatherObject> apixuWeatherConditionsList;
 
-    public ApixuWeatherAdapter(Context mContext, List<ApixuWeatherConditions> apixuWeatherConditionsList) {
+    public ApixuWeatherAdapter(Context mContext, List<WeatherObject> apixuWeatherConditionsList) {
         this.mContext = mContext;
         this.apixuWeatherConditionsList = apixuWeatherConditionsList;
     }
 
-    public void setData(List<ApixuWeatherConditions> details) {
+    public void setData(List<WeatherObject> details) {
         if (details == null) {
             details = Collections.emptyList();
         }
@@ -38,12 +37,12 @@ public class ApixuWeatherAdapter extends RecyclerView.Adapter<ApixuWeatherAdapte
         notifyDataSetChanged();
     }
 
-    public void add(ApixuWeatherConditions apixuWeatherCondition) {
+    public void add(WeatherObject apixuWeatherCondition) {
         insert(apixuWeatherCondition, apixuWeatherConditionsList.size());
         notifyItemInserted(apixuWeatherConditionsList.size() - 1);
     }
 
-    public void insert(ApixuWeatherConditions apixuWeatherCondition, int position) {
+    public void insert(WeatherObject apixuWeatherCondition, int position) {
         apixuWeatherConditionsList.add(position, apixuWeatherCondition);
         notifyItemInserted(position);
     }
@@ -61,26 +60,26 @@ public class ApixuWeatherAdapter extends RecyclerView.Adapter<ApixuWeatherAdapte
         }
     }
 
-    public void addAll(List<ApixuWeatherConditions> apixuWeatherConditionsList) {
+    public void addAll(List<WeatherObject> apixuWeatherConditionsList) {
         int startindex = apixuWeatherConditionsList.size();
         Log.e("list", "addAll: " + apixuWeatherConditionsList.size());
         apixuWeatherConditionsList.addAll(startindex, apixuWeatherConditionsList);
         notifyItemRangeInserted(startindex, apixuWeatherConditionsList.size());
     }
 
-    public void addAllInBeggining(List<ApixuWeatherConditions> apixuWeatherConditionsList) {
+    public void addAllInBeggining(List<WeatherObject> apixuWeatherConditionsList) {
         int startindex = 0;
         apixuWeatherConditionsList.addAll(startindex, apixuWeatherConditionsList);
         notifyDataSetChanged();
     }
 
-    public void addAllThatChanged(List<ApixuWeatherConditions> apixuWeatherConditionsList) {
+    public void addAllThatChanged(List<WeatherObject> apixuWeatherConditionsList) {
         int startindex = apixuWeatherConditionsList.size();
         int added = 0;
-        for (ApixuWeatherConditions apixuWeatherCondition : apixuWeatherConditionsList) {
+        for (WeatherObject apixuWeatherCondition : apixuWeatherConditionsList) {
             boolean isEqual = false;
             for (int i = 1; i < apixuWeatherConditionsList.size(); i++) {
-                ApixuWeatherConditions apixuWeatherCondition2 = apixuWeatherConditionsList.get(i);
+                WeatherObject apixuWeatherCondition2 = apixuWeatherConditionsList.get(i);
                 if (apixuWeatherCondition2.equals(apixuWeatherCondition)) {
                     isEqual = true;
                     break;
@@ -91,11 +90,11 @@ public class ApixuWeatherAdapter extends RecyclerView.Adapter<ApixuWeatherAdapte
                 added++;
             }
         }
-        Collections.sort(apixuWeatherConditionsList, new Comparator<ApixuWeatherConditions>() {
+        Collections.sort(apixuWeatherConditionsList, new Comparator<WeatherObject>() {
             int result;
 
             @Override
-            public int compare(ApixuWeatherConditions apixuWeatherConditions1, ApixuWeatherConditions apixuWeatherConditions2) {
+            public int compare(WeatherObject apixuWeatherConditions1, WeatherObject apixuWeatherConditions2) {
 //                if (apixuWeatherConditions1.getDateInTimestamp() > apixuWeatherConditions2.getDateInTimestamp()) {
 //                    result = 1;
 //                } else if (apixuWeatherConditions1.getDateInTimestamp() == apixuWeatherConditions2.getDateInTimestamp()) {
@@ -127,14 +126,12 @@ public class ApixuWeatherAdapter extends RecyclerView.Adapter<ApixuWeatherAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final ApixuWeatherConditions apixuWeatherConditions = apixuWeatherConditionsList.get(position);
-        int dateInTimestamp = apixuWeatherConditions.getDate();
-        String date = Utils.getDateString(dateInTimestamp);
-        holder.listItemDateTextview.setText(date);
-        holder.listItemForecastTextview.setText(apixuWeatherConditions.getConditionText());
-        holder.listItemHighTextview.setText(Math.round(apixuWeatherConditions.getTempMax()) + "ºC");
-        holder.listItemLowTextview.setText(Math.round(apixuWeatherConditions.getTempMin()) + "ºC");
-        switch (apixuWeatherConditions.getConditionText()) {
+        final WeatherObject apixuWeatherConditions = apixuWeatherConditionsList.get(position);
+        holder.listItemDateTextview.setText(apixuWeatherConditions.getFechahoraConsulta());
+        holder.listItemForecastTextview.setText(apixuWeatherConditions.getCondDia());
+        holder.listItemHighTextview.setText(Math.round(apixuWeatherConditions.gettMax()) + "ºC");
+        holder.listItemLowTextview.setText(Math.round(apixuWeatherConditions.gettMin()) + "ºC");
+        switch (apixuWeatherConditions.getCondDia()) {
             case "Sunny":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
@@ -222,6 +219,9 @@ public class ApixuWeatherAdapter extends RecyclerView.Adapter<ApixuWeatherAdapte
                 holder.listItemIcon.setImageResource(R.drawable.ic_rain);
                 break;
             case "Patchy rain possible":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
+                break;
+            case "Light rain shower":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
                 break;
             case "Rain":

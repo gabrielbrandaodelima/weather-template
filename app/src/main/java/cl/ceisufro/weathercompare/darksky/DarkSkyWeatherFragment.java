@@ -18,8 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.johnhiott.darkskyandroidlib.models.DataBlock;
-import com.johnhiott.darkskyandroidlib.models.DataPoint;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.johnhiott.darkskyandroidlib.models.WeatherResponse;
 
 import java.util.ArrayList;
@@ -30,8 +33,10 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cl.ceisufro.weathercompare.R;
 import cl.ceisufro.weathercompare.darksky.adapter.DarkSkyWeatherAdapter;
-import cl.ceisufro.weathercompare.models.DarkSkyWeatherConditions;
-import cl.ceisufro.weathercompare.utils.Utils;
+import cl.ceisufro.weathercompare.main.ListWeatherPresenter;
+import cl.ceisufro.weathercompare.main.ListWeatherPresenterImpl;
+import cl.ceisufro.weathercompare.models.objrequisicion.DarkSkyWeatherObject;
+import cl.ceisufro.weathercompare.models.objrequisicion.WeatherObject;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -55,14 +60,14 @@ public class DarkSkyWeatherFragment extends Fragment implements DarkSkyWeatherVi
     NestedScrollView forecastNestedScrollView;
     Unbinder unbinder;
 
-    DarkSkyWeatherPresenter presenter;
-    List<DarkSkyWeatherConditions> darkskyWeatherConditionsList;
-    List<DarkSkyWeatherConditions> darkskyWeatherConditionsListNextDays;
-    DarkSkyWeatherConditions todayDarkSkyWeatherCondition;
+    ListWeatherPresenter presenter;
+    List<WeatherObject> darkskyWeatherConditionsList;
+    List<WeatherObject> darkskyWeatherConditionsListNextDays;
+    WeatherObject todayWeatherObject;
     DarkSkyWeatherAdapter darkskyWeatherAdapter;
     Realm realm;
     RequestQueue queueDarkSkyWeather = null;
-    RealmResults<DarkSkyWeatherConditions> darkskyWeatherConditionsRealmResults;
+    RealmResults<DarkSkyWeatherObject> darkskyWeatherConditionsRealmResults;
     @BindView(R.id.list_item_today_current_textview)
     TextView listItemTodayCurrentTextview;
 
@@ -86,7 +91,7 @@ public class DarkSkyWeatherFragment extends Fragment implements DarkSkyWeatherVi
         realm = Realm.getDefaultInstance();
 
         // Obtain the cities in the Realm with asynchronous query.
-        darkskyWeatherConditionsRealmResults = realm.where(DarkSkyWeatherConditions.class).findAllAsync();
+        darkskyWeatherConditionsRealmResults = realm.where(DarkSkyWeatherObject.class).findAllAsync();
 
     }
 
@@ -99,7 +104,7 @@ public class DarkSkyWeatherFragment extends Fragment implements DarkSkyWeatherVi
         hideLayout();
         showProgress();
 
-        presenter = new DarkSkyWeatherPresenterImpl(this);
+        presenter = new ListWeatherPresenterImpl(this);
         darkskyWeatherConditionsList = new ArrayList<>();
         darkskyWeatherConditionsListNextDays = new ArrayList<>();
         return view;
@@ -108,6 +113,8 @@ public class DarkSkyWeatherFragment extends Fragment implements DarkSkyWeatherVi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        queueDarkSkyWeather = Volley.newRequestQueue(getActivity());
+        presenter.listWeatherRequest(queueDarkSkyWeather, 2);
 //        presenter.callDarkSkyRequest(Utils.latTemuco, Utils.longTemuco);
 
     }
@@ -143,6 +150,11 @@ public class DarkSkyWeatherFragment extends Fragment implements DarkSkyWeatherVi
     }
 
     @Override
+    public void displayLayout() {
+        
+    }
+
+    @Override
     public void displayWeather() {
 
         hideProgress();
@@ -151,129 +163,129 @@ public class DarkSkyWeatherFragment extends Fragment implements DarkSkyWeatherVi
 
     @Override
     public void populateWeatherList(WeatherResponse response) {
-        DataPoint currentlyDataPoint = response.getCurrently();
-        DataBlock dailyDataBlock = response.getDaily();
-
-//        JsonObject currentlyCondition = json.get("currently").getAsJsonObject();
-//        JsonElement currentlyTemperature = currentlyCondition.get("temperature");
-
-
-//        JsonArray forecastDailyArraylist = json.get("daily").getAsJsonArray();
-        for (DataPoint dailyDataPoint :
-                dailyDataBlock.getData()) {
-            int time = (int) dailyDataPoint.getTime();
-
-            String summary = dailyDataPoint.getSummary();
-            String icon = dailyDataPoint.getIcon();
-            int temperatureHigh = (int) dailyDataPoint.getTemperatureMax();
-            int temperatureLow = (int) dailyDataPoint.getTemperatureMin();
-            String pressure = dailyDataPoint.getPressure();
-            String speed = dailyDataPoint.getWindSpeed();
-            String humididty = dailyDataPoint.getHumidity();
-
-            DarkSkyWeatherConditions darkskyWeatherForecast = new DarkSkyWeatherConditions(time, temperatureHigh, temperatureLow, summary, icon, pressure, humididty, speed);
-            darkskyWeatherConditionsList.add(darkskyWeatherForecast);
-        }
-
-        todayDarkSkyWeatherCondition = new DarkSkyWeatherConditions();
-        todayDarkSkyWeatherCondition.setCurrentTemp((int) currentlyDataPoint.getTemperature());
-        DarkSkyWeatherConditions darkSkyWeatherCondition = darkskyWeatherConditionsList.get(0);
-        int todayTempHigh = darkSkyWeatherCondition.getTemperatureHigh();
-        int todayTempLow = darkSkyWeatherCondition.getTemperatureLow();
-        todayDarkSkyWeatherCondition.setDate(darkSkyWeatherCondition.getDate());
-        todayDarkSkyWeatherCondition.setPressure(darkSkyWeatherCondition.getPressure());
-        todayDarkSkyWeatherCondition.setHumididty(darkSkyWeatherCondition.getHumididty());
-        todayDarkSkyWeatherCondition.setIcon(darkSkyWeatherCondition.getIcon());
-        todayDarkSkyWeatherCondition.setSpeed(darkSkyWeatherCondition.getSpeed());
-        todayDarkSkyWeatherCondition.setSummary(darkSkyWeatherCondition.getSummary());
-        todayDarkSkyWeatherCondition.setTemperatureHigh(todayTempHigh);
-        todayDarkSkyWeatherCondition.setTemperatureLow(todayTempLow);
-
-        int dateInTimestamp = todayDarkSkyWeatherCondition.getDate();
-        String dateTodayString = Utils.getDateString(dateInTimestamp);
-
-        if (listItemTodayDateTextview != null) {
-
-            listItemTodayDateTextview.setText(dateTodayString);
-            listItemTodayForecastTextview.setText(todayDarkSkyWeatherCondition.getSummary());
-            listItemTodayCurrentTextview.setText(todayDarkSkyWeatherCondition.getCurrentTemp() + "ºC");
-            listItemTodayHighTextview.setText(todayDarkSkyWeatherCondition.getTemperatureHigh() + "ºC");
-            listItemTodayLowTextview.setText(todayDarkSkyWeatherCondition.getTemperatureLow() + "ºC");
-        }
-        switch (todayDarkSkyWeatherCondition.getIcon()) {
-            case "Sunny":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
-
-                break;
-            case "clear-day":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
-
-                break;
-            case "clear-night":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
-
-                break;
-            case "Fair":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
-
-                break;
-            case "snow":
-                listItemTodayIcon.setImageResource(R.drawable.art_snow);
-
-                break;
-            case "fog":
-                listItemTodayIcon.setImageResource(R.drawable.art_fog);
-
-                break;
-            case "Thunderstorms":
-                listItemTodayIcon.setImageResource(R.drawable.art_storm);
-
-                break;
-            case "Scattered Thunderstorms":
-                listItemTodayIcon.setImageResource(R.drawable.art_storm);
-
-                break;
-            case "rain":
-                listItemTodayIcon.setImageResource(R.drawable.art_rain);
-
-                break;
-
-            case "partly-cloudy-day":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
-                break;
-            case "partly-cloudy-night":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
-                break;
-            case "cloudy":
-                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
-                break;
-
-            case "Scattered Showers":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
-                break;
-            case "Showers":
-                listItemTodayIcon.setImageResource(R.drawable.art_rain);
-                break;
-            default:
-                break;
-        }
-
-        darkskyWeatherConditionsListNextDays = darkskyWeatherConditionsList.subList(1, darkskyWeatherConditionsList.size());
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(RecyclerView.VERTICAL);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        darkskyWeatherAdapter = new DarkSkyWeatherAdapter(getActivity(), darkskyWeatherConditionsListNextDays);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
-                layoutManager.getOrientation());
-        forecastRecycle.addItemDecoration(dividerItemDecoration);
-        forecastRecycle.setLayoutManager(layoutManager);
-        forecastRecycle.setNestedScrollingEnabled(false);
-        forecastRecycle.setLayoutParams(layoutParams);
-        forecastRecycle.setAdapter(darkskyWeatherAdapter);
-
-
-        displayWeather();
+//        DataPoint currentlyDataPoint = response.getCurrently();
+//        DataBlock dailyDataBlock = response.getDaily();
+//
+////        JsonObject currentlyCondition = json.get("currently").getAsJsonObject();
+////        JsonElement currentlyTemperature = currentlyCondition.get("temperature");
+//
+//
+////        JsonArray forecastDailyArraylist = json.get("daily").getAsJsonArray();
+//        for (DataPoint dailyDataPoint :
+//                dailyDataBlock.getData()) {
+//            int time = (int) dailyDataPoint.getTime();
+//
+//            String summary = dailyDataPoint.getSummary();
+//            String icon = dailyDataPoint.getIcon();
+//            int temperatureHigh = (int) dailyDataPoint.getTemperatureMax();
+//            int temperatureLow = (int) dailyDataPoint.getTemperatureMin();
+//            String pressure = dailyDataPoint.getPressure();
+//            String speed = dailyDataPoint.getWindSpeed();
+//            String humididty = dailyDataPoint.getHumidity();
+//
+//            DarkSkyWeatherConditions darkskyWeatherForecast = new DarkSkyWeatherConditions(time, temperatureHigh, temperatureLow, summary, icon, pressure, humididty, speed);
+//            darkskyWeatherConditionsList.add(darkskyWeatherForecast);
+//        }
+//
+//        todayWeatherObject = new DarkSkyWeatherConditions();
+//        todayWeatherObject.setCurrentTemp((int) currentlyDataPoint.getTemperature());
+//        DarkSkyWeatherConditions darkSkyWeatherCondition = darkskyWeatherConditionsList.get(0);
+//        int todayTempHigh = darkSkyWeatherCondition.getTemperatureHigh();
+//        int todayTempLow = darkSkyWeatherCondition.getTemperatureLow();
+//        todayWeatherObject.setDate(darkSkyWeatherCondition.getDate());
+//        todayWeatherObject.setPressure(darkSkyWeatherCondition.getPressure());
+//        todayWeatherObject.setHumididty(darkSkyWeatherCondition.getHumididty());
+//        todayWeatherObject.setIcon(darkSkyWeatherCondition.getIcon());
+//        todayWeatherObject.setSpeed(darkSkyWeatherCondition.getSpeed());
+//        todayWeatherObject.setSummary(darkSkyWeatherCondition.getSummary());
+//        todayWeatherObject.setTemperatureHigh(todayTempHigh);
+//        todayWeatherObject.setTemperatureLow(todayTempLow);
+//
+//        int dateInTimestamp = todayWeatherObject.getDate();
+//        String dateTodayString = Utils.getDateString(dateInTimestamp);
+//
+//        if (listItemTodayDateTextview != null) {
+//
+//            listItemTodayDateTextview.setText(dateTodayString);
+//            listItemTodayForecastTextview.setText(todayWeatherObject.getSummary());
+//            listItemTodayCurrentTextview.setText(todayWeatherObject.getCurrentTemp() + "ºC");
+//            listItemTodayHighTextview.setText(todayWeatherObject.getTemperatureHigh() + "ºC");
+//            listItemTodayLowTextview.setText(todayWeatherObject.getTemperatureLow() + "ºC");
+//        }
+//        switch (todayWeatherObject.getIcon()) {
+//            case "Sunny":
+//                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+//
+//                break;
+//            case "clear-day":
+//                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+//
+//                break;
+//            case "clear-night":
+//                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+//
+//                break;
+//            case "Fair":
+//                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+//
+//                break;
+//            case "snow":
+//                listItemTodayIcon.setImageResource(R.drawable.art_snow);
+//
+//                break;
+//            case "fog":
+//                listItemTodayIcon.setImageResource(R.drawable.art_fog);
+//
+//                break;
+//            case "Thunderstorms":
+//                listItemTodayIcon.setImageResource(R.drawable.art_storm);
+//
+//                break;
+//            case "Scattered Thunderstorms":
+//                listItemTodayIcon.setImageResource(R.drawable.art_storm);
+//
+//                break;
+//            case "rain":
+//                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+//
+//                break;
+//
+//            case "partly-cloudy-day":
+//                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+//                break;
+//            case "partly-cloudy-night":
+//                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+//                break;
+//            case "cloudy":
+//                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
+//                break;
+//
+//            case "Scattered Showers":
+//                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+//                break;
+//            case "Showers":
+//                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+//                break;
+//            default:
+//                break;
+//        }
+//
+//        darkskyWeatherConditionsListNextDays = darkskyWeatherConditionsList.subList(1, darkskyWeatherConditionsList.size());
+//        LinearLayoutManager layoutManager =
+//                new LinearLayoutManager(getActivity());
+//        layoutManager.setOrientation(RecyclerView.VERTICAL);
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//        darkskyWeatherAdapter = new DarkSkyWeatherAdapter(getActivity(), darkskyWeatherConditionsListNextDays);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
+//                layoutManager.getOrientation());
+//        forecastRecycle.addItemDecoration(dividerItemDecoration);
+//        forecastRecycle.setLayoutManager(layoutManager);
+//        forecastRecycle.setNestedScrollingEnabled(false);
+//        forecastRecycle.setLayoutParams(layoutParams);
+//        forecastRecycle.setAdapter(darkskyWeatherAdapter);
+//
+//
+//        displayWeather();
     }
 
     @Override
@@ -302,6 +314,143 @@ public class DarkSkyWeatherFragment extends Fragment implements DarkSkyWeatherVi
     public void hideLayout() {
 
         forecastNestedScrollView.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void populateWeatherObjects(String response) {
+        JsonParser parser = new JsonParser();
+        JsonObject json = (JsonObject) parser.parse(response);
+
+        JsonArray jsonArray = json.get("data").getAsJsonArray();
+
+        for (JsonElement element :
+                jsonArray) {
+            String fechahoraConsulta = element.getAsJsonObject().get("fechahoraConsulta").getAsString();
+            String condActualDia = element.getAsJsonObject().get("condActualDia").getAsString();
+            String condActualNoche = element.getAsJsonObject().get("condActualNoche").getAsString();
+            String condDia = element.getAsJsonObject().get("condDia").getAsString();
+            String condNoche = element.getAsJsonObject().get("condNoche").getAsString();
+            float tActual = element.getAsJsonObject().get("tActual").getAsFloat();
+            float tMax = element.getAsJsonObject().get("tMax").getAsFloat();
+            float tMin = element.getAsJsonObject().get("tMin").getAsFloat();
+            float presion = element.getAsJsonObject().get("presion").getAsFloat();
+            int humedad = element.getAsJsonObject().get("humedad").getAsInt();
+            float vViento = element.getAsJsonObject().get("vViento").getAsFloat();
+            WeatherObject darkSkyWeatherObject = new WeatherObject();
+            darkSkyWeatherObject.setFechahoraConsulta(fechahoraConsulta);
+            darkSkyWeatherObject.settActual(tActual);
+            darkSkyWeatherObject.settMax(tMax);
+            darkSkyWeatherObject.settMin(tMin);
+            darkSkyWeatherObject.setPresion(presion);
+            darkSkyWeatherObject.setHumedad(humedad);
+            darkSkyWeatherObject.setvViento(vViento);
+
+            if (!condActualDia.isEmpty()) {
+                darkSkyWeatherObject.setCondActualDia(condActualDia);
+
+            }
+            if (!condActualNoche.isEmpty()) {
+                darkSkyWeatherObject.setCondActualNoche(condActualNoche);
+
+            }
+            if (!condDia.isEmpty()) {
+                darkSkyWeatherObject.setCondDia(condDia);
+
+            }
+            if (!condNoche.isEmpty()) {
+                darkSkyWeatherObject.setCondNoche(condNoche);
+
+            }
+
+            darkskyWeatherConditionsList.add(0,darkSkyWeatherObject);
+        }
+        WeatherObject lastWeatherObject = new WeatherObject();
+        lastWeatherObject = darkskyWeatherConditionsList.get(0);
+        if (listItemTodayDateTextview != null) {
+
+            listItemTodayDateTextview.setText(lastWeatherObject.getFechahoraConsulta());
+            listItemTodayForecastTextview.setText(lastWeatherObject.getCondActualDia());
+            listItemTodayCurrentTextview.setText(lastWeatherObject.gettActual()+"ºC");
+            listItemTodayHighTextview.setText(lastWeatherObject.gettMax()+"ºC");
+            listItemTodayLowTextview.setText(lastWeatherObject.gettMin()+"ºC");
+        }
+        switch (lastWeatherObject.getCondActualDia()) {
+            case "Despejado":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+
+                break;
+            case "clear-night":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+
+                break;
+            case "Fair":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+
+                break;
+            case "snow":
+                listItemTodayIcon.setImageResource(R.drawable.art_snow);
+
+                break;
+            case "fog":
+                listItemTodayIcon.setImageResource(R.drawable.art_fog);
+
+                break;
+            case "Thunderstorms":
+                listItemTodayIcon.setImageResource(R.drawable.art_storm);
+
+                break;
+            case "Scattered Thunderstorms":
+                listItemTodayIcon.setImageResource(R.drawable.art_storm);
+
+                break;
+            case "Lluvia":
+                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+
+                break;
+            case "Llovizna":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+
+                break;
+
+            case "Parcialmente Nublado":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
+                break;
+            case "Nublado":
+                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
+                break;
+            case "Mayormente Nublado":
+                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
+                break;
+
+            case "Lluvia Ligera":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+                break;
+            case "Showers":
+                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+                break;
+            default:
+                break;
+
+        }
+
+        darkskyWeatherConditionsListNextDays = darkskyWeatherConditionsList.subList(1, darkskyWeatherConditionsList.size());
+
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        darkskyWeatherAdapter = new DarkSkyWeatherAdapter(getActivity(), darkskyWeatherConditionsListNextDays);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
+                layoutManager.getOrientation());
+        forecastRecycle.addItemDecoration(dividerItemDecoration);
+        forecastRecycle.setLayoutManager(layoutManager);
+        forecastRecycle.setNestedScrollingEnabled(false);
+        forecastRecycle.setLayoutParams(layoutParams);
+        forecastRecycle.setAdapter(darkskyWeatherAdapter);
+
+
+        displayWeather();
 
     }
 }

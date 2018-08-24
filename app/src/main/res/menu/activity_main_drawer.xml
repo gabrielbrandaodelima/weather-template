@@ -30,6 +30,11 @@
             android:iconTint="@color/colorButtonIcon"
             android:title="APIXU" />
         <item
+            android:id="@+id/nav_promedios"
+            android:enabled="true"
+            android:iconTint="@color/colorButtonIcon"
+            android:title="Promedios" />
+        <item
             android:id="@+id/nav_alarm"
             android:enabled="true"
             android:iconTint="@color/colorButtonIcon"

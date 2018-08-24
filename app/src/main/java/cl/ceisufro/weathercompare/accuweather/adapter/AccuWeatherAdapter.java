@@ -16,21 +16,20 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.models.AccuWeatherConditions;
-import cl.ceisufro.weathercompare.utils.Utils;
+import cl.ceisufro.weathercompare.models.objrequisicion.WeatherObject;
 
 public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.ViewHolder> {
 
     private Context mContext;
 
-    private List<AccuWeatherConditions> accuWeatherConditionsList;
+    private List<WeatherObject> accuWeatherConditionsList;
 
-    public AccuWeatherAdapter(Context mContext, List<AccuWeatherConditions> accuWeatherConditionsList) {
+    public AccuWeatherAdapter(Context mContext, List<WeatherObject> accuWeatherConditionsList) {
         this.mContext = mContext;
         this.accuWeatherConditionsList = accuWeatherConditionsList;
     }
 
-    public void setData(List<AccuWeatherConditions> details) {
+    public void setData(List<WeatherObject> details) {
         if (details == null) {
             details = Collections.emptyList();
         }
@@ -38,12 +37,12 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
         notifyDataSetChanged();
     }
 
-    public void add(AccuWeatherConditions accuWeatherCondition) {
+    public void add(WeatherObject accuWeatherCondition) {
         insert(accuWeatherCondition, accuWeatherConditionsList.size());
         notifyItemInserted(accuWeatherConditionsList.size() - 1);
     }
 
-    public void insert(AccuWeatherConditions accuWeatherCondition, int position) {
+    public void insert(WeatherObject accuWeatherCondition, int position) {
         accuWeatherConditionsList.add(position, accuWeatherCondition);
         notifyItemInserted(position);
     }
@@ -61,26 +60,26 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
         }
     }
 
-    public void addAll(List<AccuWeatherConditions> accuWeatherConditionsList) {
+    public void addAll(List<WeatherObject> accuWeatherConditionsList) {
         int startindex = accuWeatherConditionsList.size();
         Log.e("list", "addAll: " + accuWeatherConditionsList.size());
         accuWeatherConditionsList.addAll(startindex, accuWeatherConditionsList);
         notifyItemRangeInserted(startindex, accuWeatherConditionsList.size());
     }
 
-    public void addAllInBeggining(List<AccuWeatherConditions> accuWeatherConditionsList) {
+    public void addAllInBeggining(List<WeatherObject> accuWeatherConditionsList) {
         int startindex = 0;
         accuWeatherConditionsList.addAll(startindex, accuWeatherConditionsList);
         notifyDataSetChanged();
     }
 
-    public void addAllThatChanged(List<AccuWeatherConditions> accuWeatherConditionsList) {
+    public void addAllThatChanged(List<WeatherObject> accuWeatherConditionsList) {
         int startindex = accuWeatherConditionsList.size();
         int added = 0;
-        for (AccuWeatherConditions accuWeatherCondition : accuWeatherConditionsList) {
+        for (WeatherObject accuWeatherCondition : accuWeatherConditionsList) {
             boolean isEqual = false;
             for (int i = 1; i < accuWeatherConditionsList.size(); i++) {
-                AccuWeatherConditions accuWeatherCondition2 = accuWeatherConditionsList.get(i);
+                WeatherObject accuWeatherCondition2 = accuWeatherConditionsList.get(i);
                 if (accuWeatherCondition2.equals(accuWeatherCondition)) {
                     isEqual = true;
                     break;
@@ -91,11 +90,11 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
                 added++;
             }
         }
-        Collections.sort(accuWeatherConditionsList, new Comparator<AccuWeatherConditions>() {
+        Collections.sort(accuWeatherConditionsList, new Comparator<WeatherObject>() {
             int result;
 
             @Override
-            public int compare(AccuWeatherConditions accuWeatherConditions1, AccuWeatherConditions accuWeatherConditions2) {
+            public int compare(WeatherObject accuWeatherConditions1, WeatherObject accuWeatherConditions2) {
 //                if (accuWeatherConditions1.getDateInTimestamp() > accuWeatherConditions2.getDateInTimestamp()) {
 //                    result = 1;
 //                } else if (accuWeatherConditions1.getDateInTimestamp() == accuWeatherConditions2.getDateInTimestamp()) {
@@ -127,19 +126,17 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final AccuWeatherConditions accuWeatherConditions = accuWeatherConditionsList.get(position);
-        int dateInTimestamp = accuWeatherConditions.getDate();
-        String date = Utils.getDateString(dateInTimestamp);
-        holder.listItemDateTextview.setText(date);
-        holder.listItemForecastTextview.setText(accuWeatherConditions.getDayPhrase());
-        holder.listItemHighTextview.setText(Math.round(accuWeatherConditions.getTempMax()) + "ºC");
-        holder.listItemLowTextview.setText(Math.round(accuWeatherConditions.getTempMin()) + "ºC");
-        switch (accuWeatherConditions.getDayPhrase()) {
-            case "Sunny":
+        final WeatherObject accuWeatherConditions = accuWeatherConditionsList.get(position);
+        holder.listItemDateTextview.setText(accuWeatherConditions.getFechahoraConsulta());
+        holder.listItemForecastTextview.setText(accuWeatherConditions.getCondDia());
+        holder.listItemHighTextview.setText(Math.round(accuWeatherConditions.gettMax()) + "ºC");
+        holder.listItemLowTextview.setText(Math.round(accuWeatherConditions.gettMin()) + "ºC");
+        switch (accuWeatherConditions.getCondDia()) {
+            case "Soleado":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
                 break;
-            case "Clear":
+            case "Mayormente soleado":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
                 break;
@@ -151,11 +148,11 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
                 break;
-            case "Partly sunny":
+            case "Parcialmente soleado":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
                 break;
-            case "Intermittent clouds":
+            case "Nubes intermitentes":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
 
                 break;
@@ -211,11 +208,17 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
             case "Scattered showers":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
                 break;
-            case "Showers":
+            case "Chaparrones":
                 holder.listItemIcon.setImageResource(R.drawable.ic_rain);
                 break;
-            case "Rain":
+            case "Lluvias":
                 holder.listItemIcon.setImageResource(R.drawable.ic_rain);
+                break;
+            case "Mayormente nublado con chaparrones":
+                holder.listItemIcon.setImageResource(R.drawable.ic_rain);
+                break;
+            case "Mayormente nublado":
+                holder.listItemIcon.setImageResource(R.drawable.ic_cloudy);
                 break;
             default:
                 break;

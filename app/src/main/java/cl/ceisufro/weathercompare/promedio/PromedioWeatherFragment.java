@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.yahoo;
+package cl.ceisufro.weathercompare.promedio;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,51 +32,52 @@ import butterknife.Unbinder;
 import cl.ceisufro.weathercompare.R;
 import cl.ceisufro.weathercompare.main.ListWeatherPresenter;
 import cl.ceisufro.weathercompare.main.ListWeatherPresenterImpl;
-import cl.ceisufro.weathercompare.models.YahooWeatherConditions;
-import cl.ceisufro.weathercompare.models.objrequisicion.YahooWeatherObject;
-import cl.ceisufro.weathercompare.yahoo.adapter.YahooWeatherAdapter;
+import cl.ceisufro.weathercompare.main.ListWeatherView;
+import cl.ceisufro.weathercompare.models.objrequisicion.PromedioObject;
+import cl.ceisufro.weathercompare.promedio.adapter.PromedioWeatherAdapter;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 
-public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
-    @BindView(R.id.progress_forecast)
-    ProgressBar progressForecast;
-    @BindView(R.id.list_item_today_date_textview)
-    TextView listItemTodayDateTextview;
-    @BindView(R.id.list_item_today_high_textview)
-    TextView listItemTodayHighTextview;
-    @BindView(R.id.list_item_today_low_textview)
-    TextView listItemTodayLowTextview;
-    @BindView(R.id.list_item_today_icon)
-    ImageView listItemTodayIcon;
-    @BindView(R.id.list_item_today_forecast_textview)
-    TextView listItemTodayForecastTextview;
-    @BindView(R.id.forecast_recycle)
-    RecyclerView forecastRecycle;
-    @BindView(R.id.forecast_nested_scroll_view)
-    NestedScrollView forecastNestedScrollView;
-    Unbinder unbinder;
+public class PromedioWeatherFragment extends Fragment implements ListWeatherView {
 
-    YahooWeatherPresenter presenter;
-    List<YahooWeatherObject> yahooWeatherObjectList;
-    List<YahooWeatherObject> yahooWeatherObjectListNextDays;
-    YahooWeatherObject todayYahooWeatherObject;
-    YahooWeatherAdapter yahooWeatherAdapter;
+    ListWeatherPresenter presenter;
+    List<PromedioObject> promedioObjectList;
+    List<PromedioObject> promedioObjectListNextDays;
+    PromedioObject promedioObject;
+    PromedioWeatherAdapter promedioWeatherAdapter;
     Realm realm;
-    RequestQueue queueYAhooWeather = null;
-    RealmResults<YahooWeatherConditions> yahooWeatherConditionsRealmResults;
-    @BindView(R.id.list_item_today_current_textview)
-    TextView listItemTodayCurrentTextview;
+    RequestQueue requestQueue = null;
+    RealmResults<PromedioObject> promedioObjectRealmResults;
+    @BindView(R.id.progress_promedio)
+    ProgressBar progressPromedio;
+    @BindView(R.id.list_promedio_today_date_textview)
+    TextView listPromedioTodayDateTextview;
+    @BindView(R.id.list_promedio_today_current_textview)
+    TextView listPromedioTodayCurrentTextview;
+    @BindView(R.id.list_promedio_today_high_textview)
+    TextView listPromedioTodayHighTextview;
+    @BindView(R.id.list_promedio_today_low_textview)
+    TextView listPromedioTodayLowTextview;
+    @BindView(R.id.list_promedio_presion_promedio_textview)
+    TextView listPromedioPresionPromedioTextview;
+    @BindView(R.id.list_promedio_today_humedad_textview)
+    TextView listPromedioTodayHumedadTextview;
+    @BindView(R.id.list_promedio_vviento_promedio_textview)
+    TextView listPromedioVvientoPromedioTextview;
+    @BindView(R.id.promedio_recycle)
+    RecyclerView promedioRecycle;
+    @BindView(R.id.promedio_nested_scroll_view)
+    NestedScrollView promedioNestedScrollView;
     private ListWeatherPresenter listWeatherPresenter;
-
+    Unbinder unbinder;
 //    private Tracker mTracker;
 
     public static String getFragmentTag() {
-        return "yahoo";
+        return "promedios";
     }
 
-    public YahooWeatherFragment() {
+    public PromedioWeatherFragment() {
         // Required empty public constructor
     }
 
@@ -91,7 +91,7 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
         realm = Realm.getDefaultInstance();
 
         // Obtain the cities in the Realm with asynchronous query.
-        yahooWeatherConditionsRealmResults = realm.where(YahooWeatherConditions.class).findAllAsync();
+        promedioObjectRealmResults = realm.where(PromedioObject.class).findAllAsync();
 
     }
 
@@ -99,25 +99,25 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_forecast, container, false);
+        View view = inflater.inflate(R.layout.fragment_promedio, container, false);
         unbinder = ButterKnife.bind(this, view);
         hideLayout();
         showProgress();
 
-        presenter = new YahooWeatherPresenterImpl(this);
-        yahooWeatherObjectList = new ArrayList<>();
-        yahooWeatherObjectListNextDays = new ArrayList<>();
+        presenter = new ListWeatherPresenterImpl(this);
+        promedioObjectList = new ArrayList<>();
+        promedioObjectListNextDays = new ArrayList<>();
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        queueYAhooWeather = Volley.newRequestQueue(getActivity());
-//        presenter.callYahooWeather(queueYAhooWeather);
+        requestQueue = Volley.newRequestQueue(getActivity());
+//        presenter.callYahooWeather(requestQueue);
 
         listWeatherPresenter = new ListWeatherPresenterImpl(this);
-        listWeatherPresenter.listWeatherRequest(queueYAhooWeather,3);
+        listWeatherPresenter.listPromediosRequest(requestQueue);
     }
 
     @Override
@@ -153,16 +153,11 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
     @Override
     public void displayLayout() {
 
-    }
-
-    @Override
-    public void displayWeather() {
-
         hideProgress();
         showLayout();
     }
 
-//    @Override
+    //    @Override
     public void populateWeatherList(String response) {
 //        JsonParser parser = new JsonParser();
 //        JsonObject json = (JsonObject) parser.parse(response);
@@ -183,7 +178,7 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
 //            JsonElement low = yahooDayForecast.getAsJsonObject().get("low");
 //            JsonElement text = yahooDayForecast.getAsJsonObject().get("text");
 //            YahooWeatherConditions yahooWeatherForecast = new YahooWeatherConditions(date.getAsString(), day.getAsString(), text.getAsString(), code.getAsInt(), high.getAsInt(), low.getAsInt());
-//            yahooWeatherObjectList.add(yahooWeatherForecast);
+//            promedioObjectList.add(yahooWeatherForecast);
 //        }
 //
 //
@@ -257,12 +252,12 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
 //
 //        }
 //
-//        yahooWeatherObjectListNextDays = yahooWeatherObjectList.subList(1, yahooWeatherObjectList.size());
+//        promedioObjectListNextDays = promedioObjectList.subList(1, promedioObjectList.size());
 //        LinearLayoutManager layoutManager =
 //                new LinearLayoutManager(getActivity());
 //        layoutManager.setOrientation(RecyclerView.VERTICAL);
 //        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        yahooWeatherAdapter = new YahooWeatherAdapter(getActivity(), yahooWeatherObjectListNextDays);
+//        yahooWeatherAdapter = new YahooWeatherAdapter(getActivity(), promedioObjectListNextDays);
 //        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
 //                layoutManager.getOrientation());
 //        forecastRecycle.addItemDecoration(dividerItemDecoration);
@@ -279,30 +274,30 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
 
     @Override
     public void showProgress() {
-        if (progressForecast.getVisibility() == View.GONE) {
+        if (progressPromedio.getVisibility() == View.GONE) {
 
-            progressForecast.setVisibility(View.VISIBLE);
+            progressPromedio.setVisibility(View.VISIBLE);
         }
 
     }
 
     @Override
     public void hideProgress() {
-        if (progressForecast.getVisibility() == View.VISIBLE) {
+        if (progressPromedio.getVisibility() == View.VISIBLE) {
 
-            progressForecast.setVisibility(View.GONE);
+            progressPromedio.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void showLayout() {
-        forecastNestedScrollView.setVisibility(View.VISIBLE);
+        promedioNestedScrollView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLayout() {
 
-        forecastNestedScrollView.setVisibility(View.GONE);
+        promedioNestedScrollView.setVisibility(View.GONE);
 
     }
 
@@ -315,130 +310,61 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
 
         for (JsonElement yahooDayForecast :
                 jsonArray) {
-            String fechahoraConsulta = yahooDayForecast.getAsJsonObject().get("fechahoraConsulta").getAsString();
-            String condActualDia = yahooDayForecast.getAsJsonObject().get("condActualDia").getAsString();
-            String condActualNoche = yahooDayForecast.getAsJsonObject().get("condActualNoche").getAsString();
-            String condDia = yahooDayForecast.getAsJsonObject().get("condDia").getAsString();
-            String condNoche = yahooDayForecast.getAsJsonObject().get("condNoche").getAsString();
-            float tActual = yahooDayForecast.getAsJsonObject().get("tActual").getAsFloat();
-            float tMax = yahooDayForecast.getAsJsonObject().get("tMax").getAsFloat();
-            float tMin = yahooDayForecast.getAsJsonObject().get("tMin").getAsFloat();
-            float presion = yahooDayForecast.getAsJsonObject().get("presion").getAsFloat();
-            int humedad = yahooDayForecast.getAsJsonObject().get("humedad").getAsInt();
-            float vViento = yahooDayForecast.getAsJsonObject().get("vViento").getAsFloat();
-            YahooWeatherObject yahooWeatherObject = new YahooWeatherObject();
-            yahooWeatherObject.setFechahoraConsulta(fechahoraConsulta);
-            yahooWeatherObject.settActual(tActual);
-            yahooWeatherObject.settMax(tMax);
-            yahooWeatherObject.settMin(tMin);
-            yahooWeatherObject.setPresion(presion);
-            yahooWeatherObject.setHumedad(humedad);
-            yahooWeatherObject.setvViento(vViento);
+            String fechahora = yahooDayForecast.getAsJsonObject().get("fechahora").getAsString();
+            float promedioTempActual = yahooDayForecast.getAsJsonObject().get("promedioTempActual").getAsFloat();
+            float promedioTempMax = yahooDayForecast.getAsJsonObject().get("promedioTempMax").getAsFloat();
+            float promedioTempMin = yahooDayForecast.getAsJsonObject().get("promedioTempMin").getAsFloat();
+            float promedioPresion = yahooDayForecast.getAsJsonObject().get("promedioPresion").getAsFloat();
+            int promedioHumedad = yahooDayForecast.getAsJsonObject().get("promedioHumedad").getAsInt();
+            float promedioVviento = yahooDayForecast.getAsJsonObject().get("promedioVviento").getAsFloat();
 
-            if (!condActualDia.isEmpty()) {
-                yahooWeatherObject.setCondActualDia(condActualDia);
+            PromedioObject promedioObject = new PromedioObject();
+            promedioObject.setFechahora(fechahora);
+            promedioObject.setPromedioTempActual(promedioTempActual);
+            promedioObject.setPromedioTempMax(promedioTempMax);
+            promedioObject.setPromedioTempMin(promedioTempMin);
+            promedioObject.setPromedioPresion(promedioPresion);
+            promedioObject.setPromedioHumedad(promedioHumedad);
+            promedioObject.setPromedioVviento(promedioVviento);
 
-            }
-            if (!condActualNoche.isEmpty()) {
-                yahooWeatherObject.setCondActualNoche(condActualNoche);
-
-            }
-            if (!condDia.isEmpty()) {
-                yahooWeatherObject.setCondDia(condDia);
-
-            }
-            if (!condNoche.isEmpty()) {
-                yahooWeatherObject.setCondNoche(condNoche);
-
-            }
-
-            yahooWeatherObjectList.add(0,yahooWeatherObject);
+            promedioObjectList.add(promedioObject);
         }
-        YahooWeatherObject lastYahooWeatherObject = new YahooWeatherObject();
-        lastYahooWeatherObject = yahooWeatherObjectList.get(0);
-        if (listItemTodayDateTextview != null) {
+        PromedioObject lastWeatherObject = new PromedioObject();
+        lastWeatherObject = promedioObjectList.get(0);
+        if (listPromedioTodayDateTextview != null) {
 
-            listItemTodayDateTextview.setText(lastYahooWeatherObject.getFechahoraConsulta());
-            listItemTodayForecastTextview.setText(lastYahooWeatherObject.getCondActualDia());
-            listItemTodayCurrentTextview.setText(lastYahooWeatherObject.gettActual()+"ºC");
-            listItemTodayHighTextview.setText(lastYahooWeatherObject.gettMax()+"ºC");
-            listItemTodayLowTextview.setText(lastYahooWeatherObject.gettMin()+"ºC");
-        }
-        switch (lastYahooWeatherObject.getCondActualDia()) {
-            case "Mostly Sunny":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
-
-                break;
-            case "Sunny":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
-
-                break;
-            case "Clear":
-                listItemTodayIcon.setImageResource(R.drawable.art_clear);
-
-                break;
-            case "Fair":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
-
-                break;
-            case "Snow":
-                listItemTodayIcon.setImageResource(R.drawable.art_snow);
-
-                break;
-            case "Foggy":
-                listItemTodayIcon.setImageResource(R.drawable.art_fog);
-
-                break;
-            case "Thunderstorms":
-                listItemTodayIcon.setImageResource(R.drawable.art_storm);
-
-                break;
-            case "Scattered Thunderstorms":
-                listItemTodayIcon.setImageResource(R.drawable.art_storm);
-
-                break;
-            case "Rain":
-                listItemTodayIcon.setImageResource(R.drawable.art_rain);
-
-                break;
-
-            case "Partly Cloudy":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
-                break;
-            case "Mostly Cloudy":
-                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
-                break;
-            case "Cloudy":
-                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
-                break;
-
-            case "Scattered Showers":
-                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
-                break;
-            case "Showers":
-                listItemTodayIcon.setImageResource(R.drawable.art_rain);
-                break;
-            default:
-                break;
-
+            listPromedioTodayDateTextview.setText(lastWeatherObject.getFechahora());
+            listPromedioTodayCurrentTextview.setText(lastWeatherObject.getPromedioTempActual() + "ºC");
+            listPromedioTodayHighTextview.setText(lastWeatherObject.getPromedioTempMax() + "ºC");
+            listPromedioTodayLowTextview.setText(lastWeatherObject.getPromedioTempMin() + "ºC");
+            listPromedioPresionPromedioTextview.setText(lastWeatherObject.getPromedioPresion() + " mb");
+            listPromedioTodayHumedadTextview.setText(lastWeatherObject.getPromedioHumedad() + " %");
+            listPromedioVvientoPromedioTextview.setText(lastWeatherObject.getPromedioVviento() + " km/h");
         }
 
-        yahooWeatherObjectListNextDays = yahooWeatherObjectList.subList(1, yahooWeatherObjectList.size());
+        promedioObjectListNextDays = promedioObjectList.subList(1, promedioObjectList.size());
+
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        yahooWeatherAdapter = new YahooWeatherAdapter(getActivity(), yahooWeatherObjectListNextDays);
+        promedioWeatherAdapter = new PromedioWeatherAdapter(getActivity(), promedioObjectListNextDays);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
                 layoutManager.getOrientation());
-        forecastRecycle.addItemDecoration(dividerItemDecoration);
-        forecastRecycle.setLayoutManager(layoutManager);
-        forecastRecycle.setNestedScrollingEnabled(false);
-        forecastRecycle.setLayoutParams(layoutParams);
-        forecastRecycle.setAdapter(yahooWeatherAdapter);
+        promedioRecycle.addItemDecoration(dividerItemDecoration);
+        promedioRecycle.setLayoutManager(layoutManager);
+        promedioRecycle.setNestedScrollingEnabled(false);
+        promedioRecycle.setLayoutParams(layoutParams);
+        promedioRecycle.setAdapter(promedioWeatherAdapter);
 
 
-        displayWeather();
+        displayLayout();
+//        JsonObject actualCondition = jsonObjectForecast.get("item").getAsJsonObject().get("condition").getAsJsonObject();
+//        JsonElement actualCode = actualCondition.get("code");
+//        JsonElement actualTemp = actualCondition.get("temp");
+//        JsonElement actualText = actualCondition.get("text");
+//        JsonElement actualDate = actualCondition.get("date");
+
 
     }
 }

@@ -1,6 +1,8 @@
 package cl.ceisufro.weathercompare.openweather;
 
-public interface OpenWeatherView {
+import cl.ceisufro.weathercompare.main.ListWeatherView;
+
+public interface OpenWeatherView extends ListWeatherView{
     void showError(String error);
     void displayWeather();
 

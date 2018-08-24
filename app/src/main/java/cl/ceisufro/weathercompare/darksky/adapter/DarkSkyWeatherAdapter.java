@@ -16,32 +16,31 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.models.DarkSkyWeatherConditions;
-import cl.ceisufro.weathercompare.utils.Utils;
+import cl.ceisufro.weathercompare.models.objrequisicion.WeatherObject;
 
 public class DarkSkyWeatherAdapter extends RecyclerView.Adapter<DarkSkyWeatherAdapter.ViewHolder> {
 
     private Context mContext;
 
-    private List<DarkSkyWeatherConditions> darkskyWeatherConditionsList;
+    private List<WeatherObject> darkskyWeatherConditionsList;
 
-    public DarkSkyWeatherAdapter(Context mContext, List<DarkSkyWeatherConditions> darkskyWeatherConditionsList) {
+    public DarkSkyWeatherAdapter(Context mContext, List<WeatherObject> darkskyWeatherConditionsList) {
         this.mContext = mContext;
         this.darkskyWeatherConditionsList = darkskyWeatherConditionsList;
     }
-    public void setData(List<DarkSkyWeatherConditions> details) {
+    public void setData(List<WeatherObject> details) {
         if (details == null) {
             details = Collections.emptyList();
         }
         this.darkskyWeatherConditionsList = details;
         notifyDataSetChanged();
     }
-    public void add(DarkSkyWeatherConditions openWeatherCondition) {
+    public void add(WeatherObject openWeatherCondition) {
         insert(openWeatherCondition, darkskyWeatherConditionsList.size());
         notifyItemInserted(darkskyWeatherConditionsList.size() - 1);
     }
 
-    public void insert(DarkSkyWeatherConditions openWeatherCondition, int position) {
+    public void insert(WeatherObject openWeatherCondition, int position) {
         darkskyWeatherConditionsList.add(position, openWeatherCondition);
         notifyItemInserted(position);
     }
@@ -59,26 +58,26 @@ public class DarkSkyWeatherAdapter extends RecyclerView.Adapter<DarkSkyWeatherAd
         }
     }
 
-    public void addAll(List<DarkSkyWeatherConditions> openWeatherConditionsList) {
+    public void addAll(List<WeatherObject> openWeatherConditionsList) {
         int startindex = openWeatherConditionsList.size();
         Log.e("list", "addAll: " + openWeatherConditionsList.size());
         openWeatherConditionsList.addAll(startindex, openWeatherConditionsList);
         notifyItemRangeInserted(startindex, openWeatherConditionsList.size());
     }
 
-    public void addAllInBeggining(List<DarkSkyWeatherConditions> weatherConditionsList) {
+    public void addAllInBeggining(List<WeatherObject> weatherConditionsList) {
         int startindex = 0;
         weatherConditionsList.addAll(startindex, weatherConditionsList);
         notifyDataSetChanged();
     }
 
-    public void addAllThatChanged(List<DarkSkyWeatherConditions> weatherConditionsList) {
+    public void addAllThatChanged(List<WeatherObject> weatherConditionsList) {
         int startindex = weatherConditionsList.size();
         int added = 0;
-        for (DarkSkyWeatherConditions openWeatherCondition : weatherConditionsList) {
+        for (WeatherObject openWeatherCondition : weatherConditionsList) {
             boolean isEqual = false;
             for (int i = 1; i < weatherConditionsList.size(); i++) {
-                DarkSkyWeatherConditions weatherConditions = weatherConditionsList.get(i);
+                WeatherObject weatherConditions = weatherConditionsList.get(i);
                 if (weatherConditions.equals(openWeatherCondition)) {
                     isEqual = true;
                     break;
@@ -89,11 +88,11 @@ public class DarkSkyWeatherAdapter extends RecyclerView.Adapter<DarkSkyWeatherAd
                 added++;
             }
         }
-        Collections.sort(weatherConditionsList, new Comparator<DarkSkyWeatherConditions>() {
+        Collections.sort(weatherConditionsList, new Comparator<WeatherObject>() {
             int result;
 
             @Override
-            public int compare(DarkSkyWeatherConditions darkSkyWeatherConditions, DarkSkyWeatherConditions skyWeatherConditions) {
+            public int compare(WeatherObject darkSkyWeatherConditions, WeatherObject skyWeatherConditions) {
 //                if (darkSkyWeatherConditions.getDate() > skyWeatherConditions.getDate()) {
 //                    result = 1;
 //                } else if (darkSkyWeatherConditions.getDateInTimestamp() == skyWeatherConditions.getDateInTimestamp()) {
@@ -125,19 +124,13 @@ public class DarkSkyWeatherAdapter extends RecyclerView.Adapter<DarkSkyWeatherAd
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final DarkSkyWeatherConditions darkskyWeatherConditions = darkskyWeatherConditionsList.get(position);
-        int dateInTimestamp = darkskyWeatherConditions.getDate();
-        String date = Utils.getDateString(dateInTimestamp);
-        holder.listItemDateTextview.setText(date);
-        holder.listItemForecastTextview.setText(darkskyWeatherConditions.getSummary());
-        holder.listItemHighTextview.setText(darkskyWeatherConditions.getTemperatureHigh() + "ºC");
-        holder.listItemLowTextview.setText(darkskyWeatherConditions.getTemperatureLow() + "ºC");
-        switch (darkskyWeatherConditions.getIcon()) {
-            case "Sunny":
-                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
-
-                break;
-            case "clear-day":
+        final WeatherObject darkSkyWeatherObject = darkskyWeatherConditionsList.get(position);
+        holder.listItemDateTextview.setText(darkSkyWeatherObject.getFechahoraConsulta());
+        holder.listItemForecastTextview.setText(darkSkyWeatherObject.getCondActualDia());
+        holder.listItemHighTextview.setText(darkSkyWeatherObject.gettMax() + "ºC");
+        holder.listItemLowTextview.setText(darkSkyWeatherObject.gettMin() + "ºC");
+        switch (darkSkyWeatherObject.getCondActualDia()) {
+            case "Despejado":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
                 break;
@@ -165,22 +158,26 @@ public class DarkSkyWeatherAdapter extends RecyclerView.Adapter<DarkSkyWeatherAd
                 holder.listItemIcon.setImageResource(R.drawable.ic_storm);
 
                 break;
-            case "rain":
+            case "Lluvia":
                 holder.listItemIcon.setImageResource(R.drawable.ic_rain);
 
                 break;
+            case "Llovizna":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
 
-            case "partly-cloudy-day":
+                break;
+
+            case "Parcialmente Nublado":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
                 break;
-            case "partly-cloudy-night":
-                holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
+            case "Nublado":
+                holder.listItemIcon.setImageResource(R.drawable.ic_cloudy);
                 break;
-            case "cloudy":
+            case "Mayormente Nublado":
                 holder.listItemIcon.setImageResource(R.drawable.ic_cloudy);
                 break;
 
-            case "Scattered Showers":
+            case "Lluvia Ligera":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
                 break;
             case "Showers":

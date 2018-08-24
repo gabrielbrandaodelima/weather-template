@@ -22,7 +22,7 @@ public class YahooWeatherPresenterImpl implements YahooWeatherPresenter, YahooWe
 
     @Override
     public void onSuccess(String response) {
-        yahooWeatherView.populateWeatherList(response);
+        yahooWeatherView.populateWeatherObjects(response);
 
     }
 

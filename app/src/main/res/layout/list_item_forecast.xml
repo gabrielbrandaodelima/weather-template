@@ -7,6 +7,8 @@
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
+    android:divider="@color/colorBlack"
+    android:showDividers="middle"
     android:background="@drawable/touch_selector">
 
     <FrameLayout
@@ -31,6 +33,7 @@
             android:id="@+id/list_item_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLength="20"
             android:fontFamily="sans-serif-condensed"
             android:textSize="20sp"/>
 

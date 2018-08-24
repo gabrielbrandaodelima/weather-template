@@ -10,27 +10,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.models.OpenWeatherConditions;
-import cl.ceisufro.weathercompare.utils.Utils;
+import cl.ceisufro.weathercompare.models.objrequisicion.OpenWeatherObject;
 
 public class OpenWeatherAdapter extends RecyclerView.Adapter<OpenWeatherAdapter.ViewHolder> {
 
     private Context mContext;
 
-    private List<OpenWeatherConditions> openWeatherConditionsList;
+    private List<OpenWeatherObject> openWeatherConditionsList;
 
-    public OpenWeatherAdapter(Context mContext, List<OpenWeatherConditions> openWeatherConditionsList) {
+    public OpenWeatherAdapter(Context mContext, List<OpenWeatherObject> openWeatherConditionsList) {
         this.mContext = mContext;
         this.openWeatherConditionsList = openWeatherConditionsList;
     }
 
-    public void setData(List<OpenWeatherConditions> details) {
+    public void setData(List<OpenWeatherObject> details) {
         if (details == null) {
             details = Collections.emptyList();
         }
@@ -38,12 +36,12 @@ public class OpenWeatherAdapter extends RecyclerView.Adapter<OpenWeatherAdapter.
         notifyDataSetChanged();
     }
 
-    public void add(OpenWeatherConditions openWeatherCondition) {
+    public void add(OpenWeatherObject openWeatherCondition) {
         insert(openWeatherCondition, openWeatherConditionsList.size());
         notifyItemInserted(openWeatherConditionsList.size() - 1);
     }
 
-    public void insert(OpenWeatherConditions openWeatherCondition, int position) {
+    public void insert(OpenWeatherObject openWeatherCondition, int position) {
         openWeatherConditionsList.add(position, openWeatherCondition);
         notifyItemInserted(position);
     }
@@ -61,26 +59,26 @@ public class OpenWeatherAdapter extends RecyclerView.Adapter<OpenWeatherAdapter.
         }
     }
 
-    public void addAll(List<OpenWeatherConditions> openWeatherConditionsList) {
+    public void addAll(List<OpenWeatherObject> openWeatherConditionsList) {
         int startindex = openWeatherConditionsList.size();
         Log.e("list", "addAll: " + openWeatherConditionsList.size());
         openWeatherConditionsList.addAll(startindex, openWeatherConditionsList);
         notifyItemRangeInserted(startindex, openWeatherConditionsList.size());
     }
 
-    public void addAllInBeggining(List<OpenWeatherConditions> openWeatherConditionsList) {
+    public void addAllInBeggining(List<OpenWeatherObject> openWeatherConditionsList) {
         int startindex = 0;
         openWeatherConditionsList.addAll(startindex, openWeatherConditionsList);
         notifyDataSetChanged();
     }
 
-    public void addAllThatChanged(List<OpenWeatherConditions> openWeatherConditionsList) {
+    public void addAllThatChanged(List<OpenWeatherObject> openWeatherConditionsList) {
         int startindex = openWeatherConditionsList.size();
         int added = 0;
-        for (OpenWeatherConditions openWeatherCondition : openWeatherConditionsList) {
+        for (OpenWeatherObject openWeatherCondition : openWeatherConditionsList) {
             boolean isEqual = false;
             for (int i = 1; i < openWeatherConditionsList.size(); i++) {
-                OpenWeatherConditions openWeatherCondition2 = openWeatherConditionsList.get(i);
+                OpenWeatherObject openWeatherCondition2 = openWeatherConditionsList.get(i);
                 if (openWeatherCondition2.equals(openWeatherCondition)) {
                     isEqual = true;
                     break;
@@ -91,23 +89,6 @@ public class OpenWeatherAdapter extends RecyclerView.Adapter<OpenWeatherAdapter.
                 added++;
             }
         }
-        Collections.sort(openWeatherConditionsList, new Comparator<OpenWeatherConditions>() {
-            int result;
-
-            @Override
-            public int compare(OpenWeatherConditions openWeatherConditions1, OpenWeatherConditions openWeatherConditions2) {
-                if (openWeatherConditions1.getDateInTimestamp() > openWeatherConditions2.getDateInTimestamp()) {
-                    result = 1;
-                } else if (openWeatherConditions1.getDateInTimestamp() == openWeatherConditions2.getDateInTimestamp()) {
-                    result = 0;
-
-                } else if (openWeatherConditions1.getDateInTimestamp() < openWeatherConditions2.getDateInTimestamp()) {
-                    result = -1;
-                }
-                return result;
-            }
-
-        });
         if (added != 0) {
 //            notifyItemRangeInserted(startindex, added);
             notifyDataSetChanged();
@@ -127,14 +108,13 @@ public class OpenWeatherAdapter extends RecyclerView.Adapter<OpenWeatherAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final OpenWeatherConditions openWeatherConditions = openWeatherConditionsList.get(position);
-        int dateInTimestamp = openWeatherConditions.getDateInTimestamp();
-        String date = Utils.getDateString(dateInTimestamp);
-        holder.listItemDateTextview.setText(date);
-        holder.listItemForecastTextview.setText(openWeatherConditions.getWeatherMain());
-        holder.listItemHighTextview.setText(Math.round(openWeatherConditions.getTempMax()) + "ºC");
-        holder.listItemLowTextview.setText(Math.round(openWeatherConditions.getTempMin()) + "ºC");
-        switch (openWeatherConditions.getWeatherMain()) {
+        final OpenWeatherObject openWeatherConditions = openWeatherConditionsList.get(position);
+        holder.listItemDateTextview.setText(openWeatherConditions.getFechahoraConsulta());
+        holder.listItemForecastTextview.setText(openWeatherConditions.getCondDia());
+        holder.listItemHighTextview.setText(Math.round(openWeatherConditions.gettMax()) + "ºC");
+        holder.listItemLowTextview.setText(Math.round(openWeatherConditions.gettMin()) + "ºC");
+        switch (openWeatherConditions.getCondDia()) {
+
             case "Clear":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 

@@ -33,8 +33,14 @@ public class ListWeatherPresenterImpl implements ListWeatherPresenter, ListWeath
 
 
     @Override
-    public void listWeatherRequest(RequestQueue queue) {
-        listWeatherInteractor.listActionRequest(queue, this);
+    public void listWeatherRequest(RequestQueue queue, int fuenteUid) {
 
+        listWeatherInteractor.listActionRequest(queue, fuenteUid, this);
+
+    }
+
+    @Override
+    public void listPromediosRequest(RequestQueue queue) {
+        listWeatherInteractor.listPromedios(queue, this);
     }
 }

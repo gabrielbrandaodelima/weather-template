@@ -24,7 +24,7 @@ public class ListWeatherInteractorImp implements ListWeatherInteractor {
 
 
     @Override
-    public void listActionRequest(RequestQueue queue, final OnListWeatherRequestCallback callback) {
+    public void listActionRequest(RequestQueue queue, int fuenteUid, final OnListWeatherRequestCallback callback) {
 
 
         String url = Utils.LINK_API_CLIMA;
@@ -40,7 +40,7 @@ public class ListWeatherInteractorImp implements ListWeatherInteractor {
 //        }
         Gson gson = new Gson();
 //        if (urlList.length() != 0) {
-            final String urlObjString = "{\"usr\":\"appuser\",\"pass\":\"appuser.2018\",\"action\":\"list\"}";
+        final String urlObjString = "{\"usr\":\"appuser\",\"pass\":\"appuser.2018\",\"action\":\"listByFuente\",\"fuenteUid\":" + fuenteUid + "}";
 
 
             StringRequest postRequest = new StringRequest(Request.Method.POST, url,
@@ -81,5 +81,64 @@ public class ListWeatherInteractorImp implements ListWeatherInteractor {
             queue.add(postRequest);
 //        }
 
+    }
+
+    @Override
+    public void listPromedios(RequestQueue queue, final OnListWeatherRequestCallback callback) {
+
+
+        String url = Utils.LINK_API_PROMEDIO;
+
+//        final JSONObject urlList = new JSONObject();
+//        try {
+//            urlList.put("usr", Constants.USR);
+//            urlList.put("pass", Constants.PASS);
+//            urlList.put("action", Constants.ACTION_LIST);
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        Gson gson = new Gson();
+//        if (urlList.length() != 0) {
+        final String urlObjString = "{\"usr\":\"appuser\",\"pass\":\"appuser.2018\",\"action\":\"list\"}";
+
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        Log.d("Response", response);
+                        callback.onSuccess(response);
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.getMessage());
+                        callback.onFailure();
+
+                    }
+                }
+        ) {
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+
+                return urlObjString.getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+
+                return "application/json";
+            }
+
+        };
+// Add the request to the RequestQueue.
+        queue.add(postRequest);
+//        }
     }
 }

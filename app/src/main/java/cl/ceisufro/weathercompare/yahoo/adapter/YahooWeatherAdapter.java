@@ -16,68 +16,68 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.models.YahooWeatherConditions;
+import cl.ceisufro.weathercompare.models.objrequisicion.YahooWeatherObject;
 
 public class YahooWeatherAdapter extends RecyclerView.Adapter<YahooWeatherAdapter.ViewHolder> {
 
     private Context mContext;
 
-    private List<YahooWeatherConditions> yahooWeatherConditionsList;
+    private List<YahooWeatherObject> yahooWeatherObjectList;
 
-    public YahooWeatherAdapter(Context mContext, List<YahooWeatherConditions> yahooWeatherConditionsList) {
+    public YahooWeatherAdapter(Context mContext, List<YahooWeatherObject> yahooWeatherObjectList) {
         this.mContext = mContext;
-        this.yahooWeatherConditionsList = yahooWeatherConditionsList;
+        this.yahooWeatherObjectList = yahooWeatherObjectList;
     }
-    public void setData(List<YahooWeatherConditions> details) {
+    public void setData(List<YahooWeatherObject> details) {
         if (details == null) {
             details = Collections.emptyList();
         }
-        this.yahooWeatherConditionsList = details;
+        this.yahooWeatherObjectList = details;
         notifyDataSetChanged();
     }
-    public void add(YahooWeatherConditions openWeatherCondition) {
-        insert(openWeatherCondition, yahooWeatherConditionsList.size());
-        notifyItemInserted(yahooWeatherConditionsList.size() - 1);
+    public void add(YahooWeatherObject openWeatherCondition) {
+        insert(openWeatherCondition, yahooWeatherObjectList.size());
+        notifyItemInserted(yahooWeatherObjectList.size() - 1);
     }
 
-    public void insert(YahooWeatherConditions openWeatherCondition, int position) {
-        yahooWeatherConditionsList.add(position, openWeatherCondition);
+    public void insert(YahooWeatherObject openWeatherCondition, int position) {
+        yahooWeatherObjectList.add(position, openWeatherCondition);
         notifyItemInserted(position);
     }
 
     public void remove(int position) {
-        yahooWeatherConditionsList.remove(position);
+        yahooWeatherObjectList.remove(position);
         notifyItemRemoved(position);
     }
 
     public void clear() {
-        int size = yahooWeatherConditionsList.size();
+        int size = yahooWeatherObjectList.size();
         if (size > 1) {
-            yahooWeatherConditionsList.clear();
+            yahooWeatherObjectList.clear();
             notifyItemRangeRemoved(1, size);
         }
     }
 
-    public void addAll(List<YahooWeatherConditions> openWeatherConditionsList) {
+    public void addAll(List<YahooWeatherObject> openWeatherConditionsList) {
         int startindex = openWeatherConditionsList.size();
         Log.e("list", "addAll: " + openWeatherConditionsList.size());
         openWeatherConditionsList.addAll(startindex, openWeatherConditionsList);
         notifyItemRangeInserted(startindex, openWeatherConditionsList.size());
     }
 
-    public void addAllInBeggining(List<YahooWeatherConditions> weatherConditionsList) {
+    public void addAllInBeggining(List<YahooWeatherObject> weatherConditionsList) {
         int startindex = 0;
         weatherConditionsList.addAll(startindex, weatherConditionsList);
         notifyDataSetChanged();
     }
 
-    public void addAllThatChanged(List<YahooWeatherConditions> weatherConditionsList) {
+    public void addAllThatChanged(List<YahooWeatherObject> weatherConditionsList) {
         int startindex = weatherConditionsList.size();
         int added = 0;
-        for (YahooWeatherConditions openWeatherCondition : weatherConditionsList) {
+        for (YahooWeatherObject openWeatherCondition : weatherConditionsList) {
             boolean isEqual = false;
             for (int i = 1; i < weatherConditionsList.size(); i++) {
-                YahooWeatherConditions weatherConditions = weatherConditionsList.get(i);
+                YahooWeatherObject weatherConditions = weatherConditionsList.get(i);
                 if (weatherConditions.equals(openWeatherCondition)) {
                     isEqual = true;
                     break;
@@ -88,11 +88,11 @@ public class YahooWeatherAdapter extends RecyclerView.Adapter<YahooWeatherAdapte
                 added++;
             }
         }
-        Collections.sort(weatherConditionsList, new Comparator<YahooWeatherConditions>() {
+        Collections.sort(weatherConditionsList, new Comparator<YahooWeatherObject>() {
             int result;
 
             @Override
-            public int compare(YahooWeatherConditions openWeatherConditions1, YahooWeatherConditions openWeatherConditions2) {
+            public int compare(YahooWeatherObject openWeatherConditions1, YahooWeatherObject openWeatherConditions2) {
 //                if (openWeatherConditions1.getDateInTimestamp() > openWeatherConditions2.getDateInTimestamp()) {
 //                    result = 1;
 //                } else if (openWeatherConditions1.getDateInTimestamp() == openWeatherConditions2.getDateInTimestamp()) {
@@ -124,12 +124,12 @@ public class YahooWeatherAdapter extends RecyclerView.Adapter<YahooWeatherAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final YahooWeatherConditions yahooWeatherConditions = yahooWeatherConditionsList.get(position);
-        holder.listItemDateTextview.setText(yahooWeatherConditions.getDay() + ", " + yahooWeatherConditions.getDate());
-        holder.listItemForecastTextview.setText(yahooWeatherConditions.getText());
-        holder.listItemHighTextview.setText(yahooWeatherConditions.getTempMax() + "ºC");
-        holder.listItemLowTextview.setText(yahooWeatherConditions.getTempMin() + "ºC");
-        switch (yahooWeatherConditions.getText()) {
+        final YahooWeatherObject yahooWeatherObject = yahooWeatherObjectList.get(position);
+        holder.listItemDateTextview.setText(yahooWeatherObject.getFechahoraConsulta());
+        holder.listItemForecastTextview.setText(yahooWeatherObject.getCondActualDia());
+        holder.listItemHighTextview.setText(yahooWeatherObject.gettMax() + "ºC");
+        holder.listItemLowTextview.setText(yahooWeatherObject.gettMin() + "ºC");
+        switch (yahooWeatherObject.getCondActualDia()) {
             case "Sunny":
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
@@ -147,6 +147,10 @@ public class YahooWeatherAdapter extends RecyclerView.Adapter<YahooWeatherAdapte
 
                 break;
             case "Snow":
+                holder.listItemIcon.setImageResource(R.drawable.ic_snow);
+
+                break;
+            case "Rain and Snow":
                 holder.listItemIcon.setImageResource(R.drawable.ic_snow);
 
                 break;
@@ -187,31 +191,12 @@ public class YahooWeatherAdapter extends RecyclerView.Adapter<YahooWeatherAdapte
                 break;
 
         }
-//        holder.noticeDate.setText(notice.getDATE());
-//        holder.noticeTxt.setText(notice.getNAME());
-//        Picasso.with(mContext).load(notice.getImage()).placeholder(R.drawable.placeholdernewsquadrada).fit().into(holder.noticeImg);
-//        holder.noticeTxt.setText(notice.getTitle());
-//        Date date = notice.getDate();
-//        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-//        holder.noticeDate.setText(df.format(date));
-//
-//        holder.noticeFrameLyt.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                Toast.makeText(mContext, " position " + holder.getAdapterPosition(), Toast.LENGTH_SHORT).show();
-//                Intent i = new Intent(mContext, NewsActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putParcelable("notice", openWeatherConditions);
-//                i.putExtras(bundle);
-//                mContext.startActivity(i);
-//            }
-//        });
 
     }
 
     @Override
     public int getItemCount() {
-        return yahooWeatherConditionsList.size();
+        return yahooWeatherObjectList.size();
     }
 
 
