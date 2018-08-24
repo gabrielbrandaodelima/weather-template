@@ -48,14 +48,14 @@
 
         </service>
 
-        <receiver android:name=".scheduler.StartCallreceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
+        <!--<receiver android:name=".scheduler.StartCallreceiver" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+            <!--</intent-filter>-->
 
-        </receiver>
+        <!--</receiver>-->
 
-        <receiver android:name=".main.MainActivity$CallReceiver" />
+        <!--<receiver android:name=".main.MainActivity$CallReceiver" />-->
     </application>
 
 </manifest>

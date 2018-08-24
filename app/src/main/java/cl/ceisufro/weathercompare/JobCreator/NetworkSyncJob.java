@@ -1,7 +1,14 @@
 package cl.ceisufro.weathercompare.JobCreator;
 
+import android.app.KeyguardManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.PowerManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -10,23 +17,35 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.evernote.android.job.Job;
+import com.evernote.android.job.JobRequest;
+import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.johnhiott.darkskyandroidlib.RequestBuilder;
+import com.johnhiott.darkskyandroidlib.models.DataBlock;
+import com.johnhiott.darkskyandroidlib.models.DataPoint;
 import com.johnhiott.darkskyandroidlib.models.WeatherResponse;
 
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
+import cl.ceisufro.weathercompare.R;
 import cl.ceisufro.weathercompare.models.objrequisicion.AccuWeatherObject;
 import cl.ceisufro.weathercompare.models.objrequisicion.ApixuWeatherObject;
 import cl.ceisufro.weathercompare.models.objrequisicion.DarkSkyWeatherObject;
 import cl.ceisufro.weathercompare.models.objrequisicion.OpenWeatherObject;
-import cl.ceisufro.weathercompare.models.objrequisicion.PromedioObject;
 import cl.ceisufro.weathercompare.models.objrequisicion.YahooWeatherObject;
 import cl.ceisufro.weathercompare.network.OnPostRequestCallback;
 import cl.ceisufro.weathercompare.network.POSTObjectRequest;
 import cl.ceisufro.weathercompare.utils.Utils;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 
@@ -40,6 +59,16 @@ public class NetworkSyncJob extends Job {
     private DarkSkyWeatherObject darkSkyWeatherObject = null;
     private ApixuWeatherObject apixuWeatherObject = null;
 
+
+    private Disposable networkDisposable;
+
+    boolean isConn = false;
+    private boolean yahooDone = false;
+    private boolean openWeatherDone = false;
+    private boolean apixuDone = false;
+    private boolean darkSkyDone = false;
+    private boolean accuWeatherDone = false;
+
     interface OnCallCallback {
         void onSuccess(String response);
 
@@ -52,47 +81,52 @@ public class NetworkSyncJob extends Job {
     @NonNull
     protected Result onRunJob(Params params) {
         // run your job here
+        setAllFalse();
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("CREANDO JOB")
+                .setAutoCancel(false)
+                .setContentText("job")
+                .setTicker("job")
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setPriority(NotificationManager.IMPORTANCE_HIGH);
 
-        POSTObjectRequest postObjectRequest = new POSTObjectRequest();
-        RequestQueue queue = Volley.newRequestQueue(getContext());
-
-
-        Gson gson = new Gson();
-        PromedioObject promedioObject = new PromedioObject();
-        promedioObject.setFechahora("TESTE CELU: "+Calendar.getInstance().getTime().toString());
-        promedioObject.setPromedioTempActual(1.2f);
-        promedioObject.setPromedioTempMax(13.2f);
-        promedioObject.setPromedioTempMin(-51.2f);
-        promedioObject.setPromedioPresion(11.2f);
-        promedioObject.setPromedioHumedad(13);
-        promedioObject.setPromedioVviento(23.2f);
-
-        String promedioObjectString = gson.toJson(promedioObject);
-
-        postObjectRequest.sendPromedioRequest(queue, promedioObjectString, new OnPostRequestCallback() {
-            @Override
-            public void onSuccess(String response) {
-//                Log.e("response", response);
-            }
-
-            @Override
-            public void onFailure(@Nullable String error) {
-
-            }
-        });
-
-//        Toast.makeText(getContext(), "JOB EXECUTADOOOOOO", Toast.LENGTH_LONG).show();
-/*
+        NotificationManager notificationManager =
+                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify((2), notificationBuilder.build());
         PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
-        wl.acquire();
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "llamada");
+        wl.acquire(1 * 60000L);
+        KeyguardManager keyguardManager = (KeyguardManager) getContext().getSystemService(Context.KEYGUARD_SERVICE);
+        KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
+        keyguardLock.disableKeyguard();
+        ConnectivityManager conMgr = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkDisposable = ReactiveNetwork
+                .observeNetworkConnectivity(getContext())
+                .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
+                .flatMapSingle(connectivity -> ReactiveNetwork.checkInternetConnectivity())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(isConnected -> {
+                    // isConnected can be true or false
 
+                    if (isConnected) {
+
+                        callAPIs();
+                    }
+                });
+
+
+        return Result.SUCCESS;
+    }
+
+    private void callAPIs() {
         final String linkAccuWeatherCurrent = Utils.linkAccuWeatherCurrent;
         String linkAccuWeatherForecast1day = Utils.linkAccuWeatherForecast1day;
         String linkAPIXUCurrent = Utils.linkAPIXU;
         String linkOpenWeatherCurrent = Utils.linkOpenWeatherCurrent;
         String linkYahoo = Utils.linkYahoo;
-
+//
         callCurrent(getContext(), linkYahoo, new OnCallCallback() {
             @Override
             public void onSuccess(String response) {
@@ -133,14 +167,14 @@ public class NetworkSyncJob extends Job {
 
 
                     Gson gson = new Gson();
-                    String yahooWeatherObjectString = gson.toJson(yahooWeatherObject);
+                    final String yahooWeatherObjectString = gson.toJson(yahooWeatherObject);
                     postObjectRequest.sendRequest(queue, yahooWeatherObjectString, new OnPostRequestCallback() {
                         @Override
                         public void onSuccess(String response) {
 //                                Toast.makeText(getContext(), "Yahoo " + response, Toast.LENGTH_SHORT).show();
                             // Put here YOUR code.
-
-                            yahooWeatherObject = null;
+                            yahooDone = true;
+                            createPromedio();
                         }
 
                         @Override
@@ -206,7 +240,8 @@ public class NetworkSyncJob extends Job {
                         public void onSuccess(String response) {
 //                                Toast.makeText(getContext(), "Open " + response, Toast.LENGTH_SHORT).show();
                             // Put here YOUR code.
-                            openWeatherObject = null;
+                            openWeatherDone = true;
+                            createPromedio();
                         }
 
                         @Override
@@ -280,7 +315,8 @@ public class NetworkSyncJob extends Job {
                         public void onSuccess(String response) {
 //                                Toast.makeText(getContext(), "Apixu " + response, Toast.LENGTH_SHORT).show();
                             // Put here YOUR code.
-                            apixuWeatherObject = null;
+                            apixuDone = true;
+                            createPromedio();
                         }
 
                         @Override
@@ -368,7 +404,8 @@ public class NetworkSyncJob extends Job {
                                 public void onSuccess(String response) {
 //                                        Toast.makeText(getContext(), "Accu " + response, Toast.LENGTH_SHORT).show();
                                     // Put here YOUR code.
-                                    accuWeatherObject = null;
+                                    accuWeatherDone = true;
+                                    createPromedio();
                                 }
 
                                 @Override
@@ -454,7 +491,8 @@ public class NetworkSyncJob extends Job {
                         public void onSuccess(String response) {
 //                                Toast.makeText(getContext(), "Dark " + response, Toast.LENGTH_SHORT).show();
                             // Put here YOUR code.
-                            darkSkyWeatherObject = null;
+                            darkSkyDone = true;
+                            createPromedio();
                         }
 
                         @Override
@@ -472,13 +510,96 @@ public class NetworkSyncJob extends Job {
 
             }
         });
+    }
+
+    private void setAllFalse() {
+        yahooDone = false;
+        accuWeatherDone = false;
+        apixuDone = false;
+        darkSkyDone = false;
+        openWeatherDone = false;
+    }
+
+    private void calculateAndCreatePromedio() {
+        if (yahooDone && openWeatherDone && darkSkyDone && apixuDone && accuWeatherDone) {
+            if (yahooWeatherObject != null && accuWeatherObject != null && darkSkyWeatherObject != null && apixuWeatherObject != null && openWeatherObject != null) {
+
+//                float somaTactual = yahooWeatherObject.gettActual() + accuWeatherObject.gettActual() + darkSkyWeatherObject.gettActual() + apixuWeatherObject.gettActual() + openWeatherObject.gettActual();
+//                float promedioTactual = somaTactual / 5;
+//                float somaTMax = yahooWeatherObject.gettMax() + accuWeatherObject.gettMax() + darkSkyWeatherObject.gettMax() + apixuWeatherObject.gettMax() + openWeatherObject.gettMax();
+//                float promedioTMax = somaTMax / 5;
+//                float somaTmin = yahooWeatherObject.gettMin() + accuWeatherObject.gettMin() + darkSkyWeatherObject.gettMin() + apixuWeatherObject.gettMin() + openWeatherObject.gettMin();
+//                float promedioTmin = somaTmin / 5;
+//                float somaPresion = yahooWeatherObject.getPresion() + accuWeatherObject.getPresion() + darkSkyWeatherObject.getPresion() + apixuWeatherObject.getPresion() + openWeatherObject.getPresion();
+//                float promedioPresion = somaPresion / 5;
+//                int somaHumedad = (int) (yahooWeatherObject.getHumedad() + accuWeatherObject.getHumedad() + apixuWeatherObject.getHumedad() + openWeatherObject.getHumedad());
+//                int promedioHumedad = somaHumedad / 4; // ignorando DarkSky humedad == 1
+//                float somavViento = yahooWeatherObject.getvViento() + accuWeatherObject.getvViento() + darkSkyWeatherObject.getvViento() + apixuWeatherObject.getvViento() + openWeatherObject.getvViento();
+//                float promedioVviento = somavViento / 5;
+
+//                createPromedio(promedioTactual, promedioTMax, promedioTmin, promedioPresion, promedioHumedad, promedioVviento);
+            }
+
+        }
 
 
-        wl.release();
-        */
+    }
+
+    private void createPromedio() {
+
+        if (yahooDone && openWeatherDone && darkSkyDone && apixuDone && accuWeatherDone) {
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext())
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("CREANDO PROMEDIO")
+                    .setAutoCancel(false)
+                    .setContentText("promedio")
+                    .setTicker("promedio")
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setPriority(NotificationManager.IMPORTANCE_HIGH);
 
 
-        return Result.SUCCESS;
+            NotificationManager notificationManager =
+                    (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify((0), notificationBuilder.build());
+
+            POSTObjectRequest postObjectRequest = new POSTObjectRequest();
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+
+
+            postObjectRequest.createPromedioRequest(queue, new OnPostRequestCallback() {
+                @Override
+                public void onSuccess(String response) {
+//                Log.e("response", response);
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext())
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle("PROMEDIO CREADO")
+                            .setContentText(response)
+                            .setAutoCancel(false)
+                            .setContentText("promedio")
+                            .setTicker("promedio")
+                            .setDefaults(Notification.DEFAULT_ALL)
+                            .setPriority(NotificationManager.IMPORTANCE_HIGH);
+
+                    NotificationManager notificationManager =
+                            (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.notify((1), notificationBuilder.build());
+                    yahooWeatherObject = null;
+                    apixuWeatherObject = null;
+                    openWeatherObject = null;
+                    accuWeatherObject = null;
+                    darkSkyWeatherObject = null;
+                    new JobRequest.Builder(NetworkSyncJob.TAG)
+                            .setExact(60 * 60000L)
+                            .build()
+                            .schedule();
+                }
+
+                @Override
+                public void onFailure(@Nullable String error) {
+//                Log.i("error: ", error);
+                }
+            });
+        }
     }
 
 

@@ -70,7 +70,7 @@ public class AlarmFragment extends Fragment {
 
         final SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         isOn = sharedPreferences.getBoolean("isOn", false);
-        final Alarm alarm = new Alarm();
+//        final Alarm alarm = new Alarm();
 
 
 
