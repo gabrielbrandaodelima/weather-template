@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .build()
                     .schedule();
 //            mLastJobId = new JobRequest.Builder(NetworkSyncJob.TAG)
-//                    .setPeriodic(JobRequest.MIN_INTERVAL, JobRequest.MIN_FLEX)
+//                    .setPeriodic(TimeUnit.MINUTES.toMillis(60), JobRequest.MIN_FLEX)
 //                    .setUpdateCurrent(true)
 //                    .build()
 //                    .schedule();
@@ -507,32 +507,80 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 //    public static class CallReceiver extends BroadcastReceiver {
+//
 //        private YahooWeatherObject yahooWeatherObject = null;
 //        private AccuWeatherObject accuWeatherObject = null;
 //        private OpenWeatherObject openWeatherObject = null;
 //        private DarkSkyWeatherObject darkSkyWeatherObject = null;
 //        private ApixuWeatherObject apixuWeatherObject = null;
 //
+//
+//        boolean isConn = false;
+//        private boolean yahooDone = false;
+//        private boolean openWeatherDone = false;
+//        private boolean apixuDone = false;
+//        private boolean darkSkyDone = false;
+//        private boolean accuWeatherDone = false;
+//
 //        interface OnCallCallback {
 //            void onSuccess(String response);
 //
 //            void onSuccessDark(WeatherResponse response);
 //
-//            void onError(@Nullable String response);
+//            void onError(@javax.annotation.Nullable String response);
 //        }
 //
 //        @Override
 //        public void onReceive(final Context context, Intent intent) {
-//            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-//            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
-//            wl.acquire();
+//            // run your job here
+//            setAllFalse();
+//            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
+//                    .setSmallIcon(R.mipmap.ic_launcher)
+//                    .setContentTitle("CREANDO JOB")
+//                    .setAutoCancel(false)
+//                    .setContentText("job")
+//                    .setTicker("job")
+//                    .setDefaults(Notification.DEFAULT_ALL)
+//                    .setPriority(NotificationManager.IMPORTANCE_HIGH);
 //
+//            NotificationManager notificationManager =
+//                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//            notificationManager.notify((2), notificationBuilder.build());
+//            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+//            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "llamada");
+//            wl.acquire(1 * 60000L);
+//            KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+//            KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
+//            keyguardLock.disableKeyguard();
+//            ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//
+////        networkDisposable = ReactiveNetwork
+////                .observeNetworkConnectivity(getContext())
+////                .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
+////                .flatMapSingle(connectivity -> ReactiveNetwork.checkInternetConnectivity())
+////                .subscribeOn(Schedulers.io())
+////                .observeOn(AndroidSchedulers.mainThread())
+////                .subscribe(isConnected -> {
+////                    // isConnected can be true or false
+////
+////                    if (isConnected) {
+////
+////                    }
+////                });
+//            callAPIs(context);
+//
+//
+//        }
+//
+//
+//
+//        private void callAPIs(final Context context) {
 //            final String linkAccuWeatherCurrent = Utils.linkAccuWeatherCurrent;
 //            String linkAccuWeatherForecast1day = Utils.linkAccuWeatherForecast1day;
 //            String linkAPIXUCurrent = Utils.linkAPIXU;
 //            String linkOpenWeatherCurrent = Utils.linkOpenWeatherCurrent;
 //            String linkYahoo = Utils.linkYahoo;
-//
+////
 //            callCurrent(context, linkYahoo, new OnCallCallback() {
 //                @Override
 //                public void onSuccess(String response) {
@@ -573,19 +621,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //
 //
 //                        Gson gson = new Gson();
-//                        String yahooWeatherObjectString = gson.toJson(yahooWeatherObject);
+//                        final String yahooWeatherObjectString = gson.toJson(yahooWeatherObject);
 //                        postObjectRequest.sendRequest(queue, yahooWeatherObjectString, new OnPostRequestCallback() {
 //                            @Override
 //                            public void onSuccess(String response) {
-////                                Toast.makeText(context, "Yahoo " + response, Toast.LENGTH_SHORT).show();
+////                                Toast.makeText(getContext(), "Yahoo " + response, Toast.LENGTH_SHORT).show();
 //                                // Put here YOUR code.
-//
-//                                yahooWeatherObject = null;
+//                                yahooDone = true;
+//                                createPromedio();
 //                            }
 //
 //                            @Override
 //                            public void onFailure(String error) {
-////                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+////                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
 //
 //                            }
 //                        });
@@ -644,14 +692,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                        postObjectRequest.sendRequest(queue, openWeatherObjectString, new OnPostRequestCallback() {
 //                            @Override
 //                            public void onSuccess(String response) {
-////                                Toast.makeText(context, "Open " + response, Toast.LENGTH_SHORT).show();
+////                                Toast.makeText(getContext(), "Open " + response, Toast.LENGTH_SHORT).show();
 //                                // Put here YOUR code.
-//                                openWeatherObject = null;
+//                                openWeatherDone = true;
+//                                createPromedio();
 //                            }
 //
 //                            @Override
 //                            public void onFailure(String error) {
-////                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+////                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
 //
 //                            }
 //                        });
@@ -668,7 +717,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //
 //                }
 //            });
-//            callCurrent(context, linkAPIXUCurrent, new OnCallCallback() {
+//            callCurrent(context, linkAPIXUCurrent, new CallReceiver.OnCallCallback() {
 //                @Override
 //                public void onSuccess(String response) {
 //
@@ -718,14 +767,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                        postObjectRequest.sendRequest(queue, apixuWeatherObjectString, new OnPostRequestCallback() {
 //                            @Override
 //                            public void onSuccess(String response) {
-////                                Toast.makeText(context, "Apixu " + response, Toast.LENGTH_SHORT).show();
+////                                Toast.makeText(getContext(), "Apixu " + response, Toast.LENGTH_SHORT).show();
 //                                // Put here YOUR code.
-//                                apixuWeatherObject = null;
+//                                apixuDone = true;
+//                                createPromedio();
 //                            }
 //
 //                            @Override
 //                            public void onFailure(String error) {
-////                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+////                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
 //
 //                            }
 //                        });
@@ -742,7 +792,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //
 //                }
 //            });
-//            callCurrent(context, linkAccuWeatherForecast1day, new OnCallCallback() {
+//            callCurrent(getContext(), linkAccuWeatherForecast1day, new NetworkSyncJob.OnCallCallback() {
 //                @Override
 //                public void onSuccess(String response) {
 //
@@ -758,7 +808,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    final JsonElement condNoche = jsonArrayForecast.get(0).getAsJsonObject().get("Night").getAsJsonObject().get("IconPhrase");
 //
 //
-//                    callCurrent(context, linkAccuWeatherCurrent, new OnCallCallback() {
+//                    callCurrent(context, linkAccuWeatherCurrent, new NetworkSyncJob.OnCallCallback() {
 //                        @Override
 //                        public void onSuccess(String response) {
 //
@@ -806,14 +856,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                                postObjectRequest.sendRequest(queue, accuWeatherObjectString, new OnPostRequestCallback() {
 //                                    @Override
 //                                    public void onSuccess(String response) {
-////                                        Toast.makeText(context, "Accu " + response, Toast.LENGTH_SHORT).show();
+////                                        Toast.makeText(getContext(), "Accu " + response, Toast.LENGTH_SHORT).show();
 //                                        // Put here YOUR code.
-//                                        accuWeatherObject = null;
+//                                        accuWeatherDone = true;
+//                                        createPromedio();
 //                                    }
 //
 //                                    @Override
 //                                    public void onFailure(String error) {
-////                                        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+////                                    Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
 //
 //                                    }
 //                                });
@@ -892,14 +943,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                        postObjectRequest.sendRequest(queue, darkSkyWeatherObjectString, new OnPostRequestCallback() {
 //                            @Override
 //                            public void onSuccess(String response) {
-////                                Toast.makeText(context, "Dark " + response, Toast.LENGTH_SHORT).show();
+////                                Toast.makeText(getContext(), "Dark " + response, Toast.LENGTH_SHORT).show();
 //                                // Put here YOUR code.
-//                                darkSkyWeatherObject = null;
+//                                darkSkyDone = true;
+//                                createPromedio();
 //                            }
 //
 //                            @Override
 //                            public void onFailure(String error) {
-////                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+////                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
 //
 //                            }
 //                        });
@@ -912,13 +964,101 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //
 //                }
 //            });
-//
-//            wl.release();
 //        }
 //
-//        private void callCurrent(Context context, String link, final OnCallCallback callback) {
+//        private void setAllFalse() {
+//            yahooDone = false;
+//            accuWeatherDone = false;
+//            apixuDone = false;
+//            darkSkyDone = false;
+//            openWeatherDone = false;
+//        }
 //
-//            RequestQueue queue = Volley.newRequestQueue(context);
+//        private void calculateAndCreatePromedio() {
+//            if (yahooDone && openWeatherDone && darkSkyDone && apixuDone && accuWeatherDone) {
+//                if (yahooWeatherObject != null && accuWeatherObject != null && darkSkyWeatherObject != null && apixuWeatherObject != null && openWeatherObject != null) {
+//
+////                float somaTactual = yahooWeatherObject.gettActual() + accuWeatherObject.gettActual() + darkSkyWeatherObject.gettActual() + apixuWeatherObject.gettActual() + openWeatherObject.gettActual();
+////                float promedioTactual = somaTactual / 5;
+////                float somaTMax = yahooWeatherObject.gettMax() + accuWeatherObject.gettMax() + darkSkyWeatherObject.gettMax() + apixuWeatherObject.gettMax() + openWeatherObject.gettMax();
+////                float promedioTMax = somaTMax / 5;
+////                float somaTmin = yahooWeatherObject.gettMin() + accuWeatherObject.gettMin() + darkSkyWeatherObject.gettMin() + apixuWeatherObject.gettMin() + openWeatherObject.gettMin();
+////                float promedioTmin = somaTmin / 5;
+////                float somaPresion = yahooWeatherObject.getPresion() + accuWeatherObject.getPresion() + darkSkyWeatherObject.getPresion() + apixuWeatherObject.getPresion() + openWeatherObject.getPresion();
+////                float promedioPresion = somaPresion / 5;
+////                int somaHumedad = (int) (yahooWeatherObject.getHumedad() + accuWeatherObject.getHumedad() + apixuWeatherObject.getHumedad() + openWeatherObject.getHumedad());
+////                int promedioHumedad = somaHumedad / 4; // ignorando DarkSky humedad == 1
+////                float somavViento = yahooWeatherObject.getvViento() + accuWeatherObject.getvViento() + darkSkyWeatherObject.getvViento() + apixuWeatherObject.getvViento() + openWeatherObject.getvViento();
+////                float promedioVviento = somavViento / 5;
+//
+////                createPromedio(promedioTactual, promedioTMax, promedioTmin, promedioPresion, promedioHumedad, promedioVviento);
+//                }
+//
+//            }
+//
+//
+//        }
+//
+//        private void createPromedio() {
+//
+//            if (yahooDone && openWeatherDone && darkSkyDone && apixuDone && accuWeatherDone) {
+//                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(get)
+//                        .setSmallIcon(R.mipmap.ic_launcher)
+//                        .setContentTitle("CREANDO PROMEDIO")
+//                        .setAutoCancel(false)
+//                        .setContentText("promedio")
+//                        .setTicker("promedio")
+//                        .setDefaults(Notification.DEFAULT_ALL)
+//                        .setPriority(NotificationManager.IMPORTANCE_HIGH);
+//
+//
+//                NotificationManager notificationManager =
+//                        (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+//                notificationManager.notify((0), notificationBuilder.build());
+//
+//                POSTObjectRequest postObjectRequest = new POSTObjectRequest();
+//                RequestQueue queue = Volley.newRequestQueue(getContext());
+//
+//
+//                postObjectRequest.createPromedioRequest(queue, new OnPostRequestCallback() {
+//                    @Override
+//                    public void onSuccess(String response) {
+////                Log.e("response", response);
+//                        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext())
+//                                .setSmallIcon(R.mipmap.ic_launcher)
+//                                .setContentTitle("PROMEDIO CREADO")
+//                                .setContentText(response)
+//                                .setAutoCancel(false)
+//                                .setTicker("promedio")
+//                                .setDefaults(Notification.DEFAULT_ALL)
+//                                .setPriority(NotificationManager.IMPORTANCE_HIGH);
+//
+//                        NotificationManager notificationManager =
+//                                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+//                        notificationManager.notify((1), notificationBuilder.build());
+//                        yahooWeatherObject = null;
+//                        apixuWeatherObject = null;
+//                        openWeatherObject = null;
+//                        accuWeatherObject = null;
+//                        darkSkyWeatherObject = null;
+////                    new JobRequest.Builder(NetworkSyncJob.TAG)
+////                            .setExact(60 * 60000L)
+////                            .build()
+////                            .schedule();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@javax.annotation.Nullable String error) {
+////                Log.i("error: ", error);
+//                    }
+//                });
+//            }
+//        }
+//
+//
+//        private void callCurrent(Context context, String link, final NetworkSyncJob.OnCallCallback callback) {
+//
+//            RequestQueue queue = Volley.newRequestQueue(getContext());
 //            StringRequest stringRequest = new StringRequest(Request.Method.GET, link,
 //                    new Response.Listener<String>() {
 //                        @Override
@@ -941,7 +1081,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //
 //        }
 //
-//        private void callCurrentDarkSky(final OnCallCallback callback) {
+//        private void callCurrentDarkSky(final NetworkSyncJob.OnCallCallback callback) {
 //
 //            RequestBuilder weather = new RequestBuilder();
 //
@@ -965,6 +1105,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                }
 //            });
 //        }
+//
+//
 //    }
 
 }

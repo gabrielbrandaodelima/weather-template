@@ -1,7 +1,5 @@
 package cl.ceisufro.weathercompare.main;
 
-import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -48,7 +46,7 @@ public class ListWeatherInteractorImp implements ListWeatherInteractor {
                         @Override
                         public void onResponse(String response) {
                             // response
-                            Log.d("Response", response);
+//                            Log.d("Response", response);
                             callback.onSuccess(response);
 
                         }
@@ -57,7 +55,7 @@ public class ListWeatherInteractorImp implements ListWeatherInteractor {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // error
-                            Log.d("Error.Response", error.getMessage());
+//                            Log.d("Error.Response", error.getMessage());
                             callback.onFailure();
 
                         }
@@ -108,7 +106,7 @@ public class ListWeatherInteractorImp implements ListWeatherInteractor {
                     @Override
                     public void onResponse(String response) {
                         // response
-                        Log.d("Response", response);
+//                        Log.d("Response", response);
                         callback.onSuccess(response);
 
                     }
@@ -117,7 +115,7 @@ public class ListWeatherInteractorImp implements ListWeatherInteractor {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // error
-                        Log.d("Error.Response", error.getMessage());
+//                        Log.d("Error.Response", error.getMessage());
                         callback.onFailure();
 
                     }

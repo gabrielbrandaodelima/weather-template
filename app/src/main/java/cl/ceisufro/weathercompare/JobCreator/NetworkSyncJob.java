@@ -5,7 +5,6 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -18,8 +17,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
-import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate;
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -43,9 +40,7 @@ import cl.ceisufro.weathercompare.models.objrequisicion.YahooWeatherObject;
 import cl.ceisufro.weathercompare.network.OnPostRequestCallback;
 import cl.ceisufro.weathercompare.network.POSTObjectRequest;
 import cl.ceisufro.weathercompare.utils.Utils;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 
@@ -101,20 +96,21 @@ public class NetworkSyncJob extends Job {
         KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
         keyguardLock.disableKeyguard();
         ConnectivityManager conMgr = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        networkDisposable = ReactiveNetwork
-                .observeNetworkConnectivity(getContext())
-                .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
-                .flatMapSingle(connectivity -> ReactiveNetwork.checkInternetConnectivity())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isConnected -> {
-                    // isConnected can be true or false
 
-                    if (isConnected) {
-
-                        callAPIs();
-                    }
-                });
+//        networkDisposable = ReactiveNetwork
+//                .observeNetworkConnectivity(getContext())
+//                .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
+//                .flatMapSingle(connectivity -> ReactiveNetwork.checkInternetConnectivity())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(isConnected -> {
+//                    // isConnected can be true or false
+//
+//                    if (isConnected) {
+//
+//                    }
+//                });
+        callAPIs();
 
 
         return Result.SUCCESS;
@@ -575,7 +571,6 @@ public class NetworkSyncJob extends Job {
                             .setContentTitle("PROMEDIO CREADO")
                             .setContentText(response)
                             .setAutoCancel(false)
-                            .setContentText("promedio")
                             .setTicker("promedio")
                             .setDefaults(Notification.DEFAULT_ALL)
                             .setPriority(NotificationManager.IMPORTANCE_HIGH);

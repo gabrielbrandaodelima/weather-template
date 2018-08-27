@@ -327,7 +327,7 @@ public class PromedioWeatherFragment extends Fragment implements ListWeatherView
             promedioObject.setPromedioHumedad(promedioHumedad);
             promedioObject.setPromedioVviento(promedioVviento);
 
-            promedioObjectList.add(promedioObject);
+            promedioObjectList.add(0,promedioObject);
         }
         PromedioObject lastWeatherObject = new PromedioObject();
         lastWeatherObject = promedioObjectList.get(0);
