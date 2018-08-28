@@ -214,6 +214,9 @@ public class AccuWeatherAdapter extends RecyclerView.Adapter<AccuWeatherAdapter.
             case "Lluvias":
                 holder.listItemIcon.setImageResource(R.drawable.ic_rain);
                 break;
+            case "Nublado":
+                holder.listItemIcon.setImageResource(R.drawable.ic_cloudy);
+                break;
             case "Mayormente nublado con chaparrones":
                 holder.listItemIcon.setImageResource(R.drawable.ic_rain);
                 break;

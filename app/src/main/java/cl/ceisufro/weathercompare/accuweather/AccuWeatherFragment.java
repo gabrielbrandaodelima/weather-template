@@ -475,6 +475,9 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
             case "Chaparrones":
                 listItemTodayIcon.setImageResource(R.drawable.art_rain);
                 break;
+            case "Nublado":
+                listItemTodayIcon.setImageResource(R.drawable.art_clouds);
+                break;
             case "Lluvias":
                 listItemTodayIcon.setImageResource(R.drawable.art_rain);
                 break;

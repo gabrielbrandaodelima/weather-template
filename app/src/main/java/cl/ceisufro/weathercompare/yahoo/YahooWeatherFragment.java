@@ -377,6 +377,10 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
                 listItemTodayIcon.setImageResource(R.drawable.art_clear);
 
                 break;
+            case "Mostly clear":
+                listItemTodayIcon.setImageResource(R.drawable.art_clear);
+
+                break;
             case "Fair":
                 listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
 

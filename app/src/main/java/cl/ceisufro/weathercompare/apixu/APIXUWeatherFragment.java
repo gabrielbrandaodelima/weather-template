@@ -558,6 +558,25 @@ public class APIXUWeatherFragment extends Fragment implements ApixuWeatherView {
             case "Light rain shower":
                 listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
                 break;
+            case "Light drizzle":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+                break;
+            case "Mist":
+                listItemTodayIcon.setImageResource(R.drawable.art_fog);
+
+                break;
+            case "Moderate rain":
+                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+                break;
+            case "Moderate rain at times":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+                break;
+            case "Heavy rain at times":
+                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+                break;
+            case "Light rain":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+                break;
             case "Rain":
                 listItemTodayIcon.setImageResource(R.drawable.art_rain);
                 break;

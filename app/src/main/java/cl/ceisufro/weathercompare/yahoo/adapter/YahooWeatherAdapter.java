@@ -142,6 +142,10 @@ public class YahooWeatherAdapter extends RecyclerView.Adapter<YahooWeatherAdapte
                 holder.listItemIcon.setImageResource(R.drawable.ic_clear);
 
                 break;
+            case "Mostly Clear":
+                holder.listItemIcon.setImageResource(R.drawable.ic_clear);
+
+                break;
             case "Fair":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_clouds);
 

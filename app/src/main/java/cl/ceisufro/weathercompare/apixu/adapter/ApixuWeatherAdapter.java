@@ -227,6 +227,25 @@ public class ApixuWeatherAdapter extends RecyclerView.Adapter<ApixuWeatherAdapte
             case "Rain":
                 holder.listItemIcon.setImageResource(R.drawable.ic_rain);
                 break;
+            case "Light drizzle":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
+                break;
+            case "Mist":
+                holder.listItemIcon.setImageResource(R.drawable.ic_fog);
+
+                break;
+            case "Moderate rain":
+                holder.listItemIcon.setImageResource(R.drawable.ic_rain);
+                break;
+            case "Moderate rain at times":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
+                break;
+            case "Heavy rain at times":
+                holder.listItemIcon.setImageResource(R.drawable.ic_rain);
+                break;
+            case "Light rain":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
+                break;
             default:
                 break;
         }
