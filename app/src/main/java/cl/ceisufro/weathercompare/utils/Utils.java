@@ -20,7 +20,8 @@ public class Utils {
 
 //    public static String keyAccuWeather = "MLPJM9uoLicKgPSMfr0etmM8jZdm1TWO"; SECOND KEY
 //    public static String keyAccuWeather = "gocXFyTJhu5bFWovlqVM1a12gQ3OkAjL"; THIRD KEY
-    public static String keyAccuWeather = "COjjKSqzglqBIimkNGagwLeH3dM7tWKJ";
+//    public static String keyAccuWeather = "COjjKSqzglqBIimkNGagwLeH3dM7tWKJ"; FOURTH KEY
+    public static String keyAccuWeather = "XR74WI9IE2EQL4GW0MKjfGk7zAGd6mSa";
     public static String idTemucoOpenWeather = "3870011";
     public static String idTemucoAccuWeather = "52485";
     public static String latTemuco = "-38.7359";
