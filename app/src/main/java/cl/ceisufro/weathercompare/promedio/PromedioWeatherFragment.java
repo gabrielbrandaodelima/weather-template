@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.JsonArray;
@@ -69,6 +70,14 @@ public class PromedioWeatherFragment extends Fragment implements ListWeatherView
     RecyclerView promedioRecycle;
     @BindView(R.id.promedio_nested_scroll_view)
     NestedScrollView promedioNestedScrollView;
+    @BindView(R.id.error_animation_view)
+    LottieAnimationView errorAnimationView;
+    @BindView(R.id.error_text)
+    TextView errorText;
+    @BindView(R.id.error_layout)
+    LinearLayout errorLayout;
+    @BindView(R.id.ultimo_dato_layout)
+    LinearLayout ultimoDatoLayout;
     private ListWeatherPresenter listWeatherPresenter;
     Unbinder unbinder;
 //    private Tracker mTracker;
@@ -146,15 +155,32 @@ public class PromedioWeatherFragment extends Fragment implements ListWeatherView
 
     @Override
     public void showError(String error) {
-        Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+        if (progressPromedio != null) {
 
+            displayTimeoutError();
+            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void displayTimeoutError() {
+
+        hideProgress();
+        showTimeoutError();
+    }
+
+    public void showTimeoutError() {
+        errorLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void displayLayout() {
 
-        hideProgress();
-        showLayout();
+        if (progressPromedio != null) {
+
+            hideProgress();
+            showLayout();
+        }
     }
 
     //    @Override
@@ -327,7 +353,7 @@ public class PromedioWeatherFragment extends Fragment implements ListWeatherView
             promedioObject.setPromedioHumedad(promedioHumedad);
             promedioObject.setPromedioVviento(promedioVviento);
 
-            promedioObjectList.add(0,promedioObject);
+            promedioObjectList.add(0, promedioObject);
         }
         PromedioObject lastWeatherObject = new PromedioObject();
         lastWeatherObject = promedioObjectList.get(0);
@@ -340,6 +366,7 @@ public class PromedioWeatherFragment extends Fragment implements ListWeatherView
             listPromedioPresionPromedioTextview.setText(lastWeatherObject.getPromedioPresion() + " mb");
             listPromedioTodayHumedadTextview.setText(lastWeatherObject.getPromedioHumedad() + " %");
             listPromedioVvientoPromedioTextview.setText(lastWeatherObject.getPromedioVviento() + " km/h");
+
         }
 
         promedioObjectListNextDays = promedioObjectList.subList(1, promedioObjectList.size());

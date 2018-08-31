@@ -3,6 +3,7 @@ package cl.ceisufro.weathercompare.yahoo;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.transition.TransitionManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DividerItemDecoration;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.JsonArray;
@@ -69,6 +71,14 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
     RealmResults<YahooWeatherConditions> yahooWeatherConditionsRealmResults;
     @BindView(R.id.list_item_today_current_textview)
     TextView listItemTodayCurrentTextview;
+    @BindView(R.id.error_animation_view)
+    LottieAnimationView errorAnimationView;
+    @BindView(R.id.error_layout)
+    LinearLayout errorLayout;
+    @BindView(R.id.error_text)
+    TextView errorText;
+    @BindView(R.id.ultimo_dato_layout)
+    LinearLayout ultimoDatoLayout;
     private ListWeatherPresenter listWeatherPresenter;
 
 //    private Tracker mTracker;
@@ -117,7 +127,7 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
 //        presenter.callYahooWeather(queueYAhooWeather);
 
         listWeatherPresenter = new ListWeatherPresenterImpl(this);
-        listWeatherPresenter.listWeatherRequest(queueYAhooWeather,3);
+        listWeatherPresenter.listWeatherRequest(queueYAhooWeather, 3);
     }
 
     @Override
@@ -146,8 +156,22 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
 
     @Override
     public void showError(String error) {
-        Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+        if (progressForecast != null) {
 
+            displayTimeoutError();
+            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void displayTimeoutError() {
+
+        hideProgress();
+        showTimeoutError();
+    }
+
+    public void showTimeoutError() {
+        errorLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -158,11 +182,14 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
     @Override
     public void displayWeather() {
 
-        hideProgress();
-        showLayout();
+        if (progressForecast != null) {
+
+            hideProgress();
+            showLayout();
+        }
     }
 
-//    @Override
+    //    @Override
     public void populateWeatherList(String response) {
 //        JsonParser parser = new JsonParser();
 //        JsonObject json = (JsonObject) parser.parse(response);
@@ -352,7 +379,7 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
 
             }
 
-            yahooWeatherObjectList.add(0,yahooWeatherObject);
+            yahooWeatherObjectList.add(0, yahooWeatherObject);
         }
         YahooWeatherObject lastYahooWeatherObject = new YahooWeatherObject();
         lastYahooWeatherObject = yahooWeatherObjectList.get(0);
@@ -360,9 +387,11 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
 
             listItemTodayDateTextview.setText(lastYahooWeatherObject.getFechahoraConsulta());
             listItemTodayForecastTextview.setText(lastYahooWeatherObject.getCondActualDia());
-            listItemTodayCurrentTextview.setText(lastYahooWeatherObject.gettActual()+"ºC");
-            listItemTodayHighTextview.setText(lastYahooWeatherObject.gettMax()+"ºC");
-            listItemTodayLowTextview.setText(lastYahooWeatherObject.gettMin()+"ºC");
+            listItemTodayCurrentTextview.setText(lastYahooWeatherObject.gettActual() + "ºC");
+            listItemTodayHighTextview.setText(lastYahooWeatherObject.gettMax() + "ºC");
+            listItemTodayLowTextview.setText(lastYahooWeatherObject.gettMin() + "ºC");
+
+            TransitionManager.beginDelayedTransition(ultimoDatoLayout);
         }
         switch (lastYahooWeatherObject.getCondActualDia()) {
             case "Mostly Sunny":

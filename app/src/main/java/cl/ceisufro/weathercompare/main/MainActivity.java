@@ -25,10 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.evernote.android.job.JobManager;
-import com.evernote.android.job.JobRequest;
-import com.johnhiott.darkskyandroidlib.ForecastApi;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,10 +36,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cl.ceisufro.weathercompare.JobCreator.NetworkSyncJob;
 import cl.ceisufro.weathercompare.R;
 import cl.ceisufro.weathercompare.accuweather.AccuWeatherFragment;
-import cl.ceisufro.weathercompare.alarm.AlarmFragment;
 import cl.ceisufro.weathercompare.apixu.APIXUWeatherFragment;
 import cl.ceisufro.weathercompare.darksky.DarkSkyWeatherFragment;
 import cl.ceisufro.weathercompare.models.AccuWeatherConditions;
@@ -52,7 +47,6 @@ import cl.ceisufro.weathercompare.models.OpenWeatherConditions;
 import cl.ceisufro.weathercompare.models.YahooWeatherConditions;
 import cl.ceisufro.weathercompare.openweather.OpenWeatherFragment;
 import cl.ceisufro.weathercompare.promedio.PromedioWeatherFragment;
-import cl.ceisufro.weathercompare.utils.Utils;
 import cl.ceisufro.weathercompare.yahoo.YahooWeatherFragment;
 
 //import cl.ceisufro.weathercompare.network.YahooWeatherRequest;
@@ -125,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
 
-        mJobManager = JobManager.instance();
+//        mJobManager = JobManager.instance();
 
         // Get a Realm instance for this thread
 
@@ -134,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        ForecastApi.create(Utils.keyDarkSky);
+//        ForecastApi.create(Utils.keyDarkSky);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -150,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setMainFragmentSelected();
         }
         onNewIntent(getIntent());
-        queueList = Volley.newRequestQueue(getApplicationContext());
+//        queueList = Volley.newRequestQueue(getApplicationContext());
 
 //        hideLayout();
 //        showProgress();
@@ -277,22 +271,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onEvent(String event) {
-        if (event.equals("setJob")) {
-
-            new JobRequest.Builder(NetworkSyncJob.TAG)
-                    .startNow()
-                    .build()
-                    .schedule();
-//            mLastJobId = new JobRequest.Builder(NetworkSyncJob.TAG)
-//                    .setPeriodic(TimeUnit.MINUTES.toMillis(60), JobRequest.MIN_FLEX)
-//                    .setUpdateCurrent(true)
+//        if (event.equals("setJob")) {
+//
+//            new JobRequest.Builder(NetworkSyncJob.TAG)
+//                    .startNow()
 //                    .build()
 //                    .schedule();
-
-        } else if (event.equals("cancelJob")) {
-
-            mJobManager.cancelAll();
-        }
+////            mLastJobId = new JobRequest.Builder(NetworkSyncJob.TAG)
+////                    .setPeriodic(TimeUnit.MINUTES.toMillis(60), JobRequest.MIN_FLEX)
+////                    .setUpdateCurrent(true)
+////                    .build()
+////                    .schedule();
+//
+//        } else if (event.equals("cancelJob")) {
+//
+//            mJobManager.cancelAll();
+//        }
 
     }
 
@@ -342,11 +336,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             actionBarTitle.setText("Promedios");
             navigationView.getMenu().findItem(R.id.nav_promedios).setChecked(true);
 
-        } else if (currentTag.equals(AlarmFragment.getFragmentTag())) {
-            actionBarTitle.setText("Requisición Periodica");
-            navigationView.getMenu().findItem(R.id.nav_alarm).setChecked(true);
-
         }
+//        else if (currentTag.equals(AlarmFragment.getFragmentTag())) {
+//            actionBarTitle.setText("Requisición Periodica");
+//            navigationView.getMenu().findItem(R.id.nav_alarm).setChecked(true);
+//
+//        }
 
     }
 
@@ -408,15 +403,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 currentTag = PromedioWeatherFragment.getFragmentTag();
             }
 
-        } else if (id == R.id.nav_alarm) {
-
-            actionBarTitle.setText("Requisición Periodica");
-            if (!currentTag.equals(AlarmFragment.getFragmentTag())) {
-                mFragmentToSet = new AlarmFragment();
-                currentTag = AlarmFragment.getFragmentTag();
-            }
-
         }
+//        else if (id == R.id.nav_alarm) {
+//
+//            actionBarTitle.setText("Requisición Periodica");
+//            if (!currentTag.equals(AlarmFragment.getFragmentTag())) {
+//                mFragmentToSet = new AlarmFragment();
+//                currentTag = AlarmFragment.getFragmentTag();
+//            }
+
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

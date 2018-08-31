@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.JsonArray;
@@ -69,6 +70,14 @@ public class APIXUWeatherFragment extends Fragment implements ApixuWeatherView {
     RealmResults<WeatherObject> apixuWeatherConditionsRealmResults;
     @BindView(R.id.list_item_today_current_textview)
     TextView listItemTodayCurrentTextview;
+    @BindView(R.id.error_animation_view)
+    LottieAnimationView errorAnimationView;
+    @BindView(R.id.error_text)
+    TextView errorText;
+    @BindView(R.id.error_layout)
+    LinearLayout errorLayout;
+    @BindView(R.id.ultimo_dato_layout)
+    LinearLayout ultimoDatoLayout;
     private Integer currentTemp = null;
 
 //    private RealmChangeListener<RealmResults<WeatherObject>> realmChangeListener = apixuWeatherConditionsRealmResults -> {
@@ -177,8 +186,23 @@ public class APIXUWeatherFragment extends Fragment implements ApixuWeatherView {
 
     @Override
     public void showError(String error) {
-        Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
 
+        if (progressForecast != null) {
+
+            displayTimeoutError();
+            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void displayTimeoutError() {
+
+        hideProgress();
+        showTimeoutError();
+    }
+
+    public void showTimeoutError() {
+        errorLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -189,8 +213,11 @@ public class APIXUWeatherFragment extends Fragment implements ApixuWeatherView {
     @Override
     public void displayWeather() {
 
-        hideProgress();
-        showLayout();
+        if (progressForecast != null) {
+
+            hideProgress();
+            showLayout();
+        }
     }
 
     @Override
@@ -453,7 +480,7 @@ public class APIXUWeatherFragment extends Fragment implements ApixuWeatherView {
 
             }
 
-            apixuWeatherConditionsArrayList.add(0,darkSkyWeatherObject);
+            apixuWeatherConditionsArrayList.add(0, darkSkyWeatherObject);
         }
         WeatherObject lastWeatherObject = new WeatherObject();
         lastWeatherObject = apixuWeatherConditionsArrayList.get(0);
@@ -461,9 +488,10 @@ public class APIXUWeatherFragment extends Fragment implements ApixuWeatherView {
 
             listItemTodayDateTextview.setText(lastWeatherObject.getFechahoraConsulta());
             listItemTodayForecastTextview.setText(lastWeatherObject.getCondDia());
-            listItemTodayCurrentTextview.setText(lastWeatherObject.gettActual()+"ºC");
-            listItemTodayHighTextview.setText(lastWeatherObject.gettMax()+"ºC");
-            listItemTodayLowTextview.setText(lastWeatherObject.gettMin()+"ºC");
+            listItemTodayCurrentTextview.setText(lastWeatherObject.gettActual() + "ºC");
+            listItemTodayHighTextview.setText(lastWeatherObject.gettMax() + "ºC");
+            listItemTodayLowTextview.setText(lastWeatherObject.gettMin() + "ºC");
+
         }
         switch (lastWeatherObject.getCondDia()) {
             case "Sunny":

@@ -2,7 +2,10 @@ package cl.ceisufro.weathercompare.main;
 
 import android.app.ProgressDialog;
 
+import com.android.volley.ClientError;
 import com.android.volley.RequestQueue;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
 
 
 public class ListWeatherPresenterImpl implements ListWeatherPresenter, ListWeatherInteractor.OnListWeatherRequestCallback {
@@ -26,9 +29,17 @@ public class ListWeatherPresenterImpl implements ListWeatherPresenter, ListWeath
     }
 
     @Override
-    public void onFailure() {
+    public void onFailure(VolleyError error) {
+        if (error.getClass().equals(TimeoutError.class)) {
 
-        listWeatherView.showError("Hubo un error");
+            listWeatherView.showError("Timeout error en el servidor");
+        } else if (error.getClass().equals(ClientError.class)) {
+
+            listWeatherView.showError("Servidor se calió");
+        } else {
+            listWeatherView.showError("Hubo un error, o servidor se calió");
+
+        }
     }
 
 

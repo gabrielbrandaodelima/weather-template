@@ -56,7 +56,7 @@ public class ListWeatherInteractorImp implements ListWeatherInteractor {
                         public void onErrorResponse(VolleyError error) {
                             // error
 //                            Log.d("Error.Response", error.getMessage());
-                            callback.onFailure();
+                            callback.onFailure(error);
 
                         }
                     }
@@ -116,7 +116,7 @@ public class ListWeatherInteractorImp implements ListWeatherInteractor {
                     public void onErrorResponse(VolleyError error) {
                         // error
 //                        Log.d("Error.Response", error.getMessage());
-                        callback.onFailure();
+                        callback.onFailure(error);
 
                     }
                 }

@@ -1,6 +1,7 @@
 package cl.ceisufro.weathercompare.main;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 
 public interface ListWeatherInteractor {
 
@@ -13,7 +14,7 @@ public interface ListWeatherInteractor {
     interface OnListWeatherRequestCallback {
         void onSuccess(String response);
 
-        void onFailure();
+        void onFailure(VolleyError error);
     }
 
 
