@@ -116,13 +116,12 @@ public class PromedioWeatherAdapter extends RecyclerView.Adapter<PromedioWeather
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.list_item_promedio, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.setIsRecyclable(false);
+
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-
         final PromedioObject promedioObject = promedioObjectList.get(position);
         holder.listPromedioDate.setText(promedioObject.getFechahora());
         holder.listPromedioTActual.setText(promedioObject.getPromedioTempActual() + "ºC");

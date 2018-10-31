@@ -101,7 +101,6 @@ public class OpenWeatherAdapter extends RecyclerView.Adapter<OpenWeatherAdapter.
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.list_item_forecast, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.setIsRecyclable(false);
         return viewHolder;
     }
 

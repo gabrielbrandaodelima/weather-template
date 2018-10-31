@@ -117,7 +117,6 @@ public class DarkSkyWeatherAdapter extends RecyclerView.Adapter<DarkSkyWeatherAd
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.list_item_forecast, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.setIsRecyclable(false);
         return viewHolder;
     }
 
@@ -178,6 +177,9 @@ public class DarkSkyWeatherAdapter extends RecyclerView.Adapter<DarkSkyWeatherAd
                 break;
 
             case "Lluvia Ligera":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
+                break;
+            case "Lluvia Ligera y Pocos Vientos":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
                 break;
             case "Showers":

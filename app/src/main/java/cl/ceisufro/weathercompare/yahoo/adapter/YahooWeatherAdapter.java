@@ -117,7 +117,6 @@ public class YahooWeatherAdapter extends RecyclerView.Adapter<YahooWeatherAdapte
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.list_item_forecast, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.setIsRecyclable(false);
         return viewHolder;
     }
 
@@ -159,6 +158,10 @@ public class YahooWeatherAdapter extends RecyclerView.Adapter<YahooWeatherAdapte
 
                 break;
             case "Foggy":
+                holder.listItemIcon.setImageResource(R.drawable.ic_fog);
+
+                break;
+            case "Breezy":
                 holder.listItemIcon.setImageResource(R.drawable.ic_fog);
 
                 break;

@@ -443,6 +443,10 @@ public class AccuWeatherFragment extends Fragment implements AccuWeatherView {
                 listItemTodayIcon.setImageResource(R.drawable.art_clear);
 
                 break;
+            case "Parcialmente soleado con chaparrones":
+                listItemTodayIcon.setImageResource(R.drawable.art_rain);
+
+                break;
             case "Nubes intermitentes":
                 listItemTodayIcon.setImageResource(R.drawable.art_light_clouds);
 

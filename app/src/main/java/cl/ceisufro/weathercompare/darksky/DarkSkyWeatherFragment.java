@@ -453,6 +453,9 @@ public class DarkSkyWeatherFragment extends Fragment implements DarkSkyWeatherVi
             case "Lluvia Ligera":
                 listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
                 break;
+            case "Lluvia Ligera y Pocos Vientos":
+                listItemTodayIcon.setImageResource(R.drawable.art_light_rain);
+                break;
             case "Showers":
                 listItemTodayIcon.setImageResource(R.drawable.art_rain);
                 break;

@@ -443,6 +443,7 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
                 break;
             case "Cloudy":
                 listItemTodayIcon.setImageResource(R.drawable.art_clouds);
+
                 break;
 
             case "Scattered Showers":
@@ -450,6 +451,9 @@ public class YahooWeatherFragment extends Fragment implements YahooWeatherView {
                 break;
             case "Showers":
                 listItemTodayIcon.setImageResource(R.drawable.art_rain);
+                break;
+            case "Breezy":
+                listItemTodayIcon.setImageResource(R.drawable.art_fog);
                 break;
             default:
                 break;

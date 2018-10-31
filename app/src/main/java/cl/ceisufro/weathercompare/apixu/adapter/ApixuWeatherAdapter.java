@@ -119,7 +119,6 @@ public class ApixuWeatherAdapter extends RecyclerView.Adapter<ApixuWeatherAdapte
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.list_item_forecast, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.setIsRecyclable(false);
         return viewHolder;
     }
 
@@ -226,6 +225,9 @@ public class ApixuWeatherAdapter extends RecyclerView.Adapter<ApixuWeatherAdapte
                 break;
             case "Rain":
                 holder.listItemIcon.setImageResource(R.drawable.ic_rain);
+                break;
+            case "Patchy light drizzle":
+                holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
                 break;
             case "Light drizzle":
                 holder.listItemIcon.setImageResource(R.drawable.ic_light_rain);
