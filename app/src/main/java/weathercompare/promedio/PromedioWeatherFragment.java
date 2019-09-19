@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.promedio;
+package weathercompare.promedio;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -31,11 +31,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.main.ListWeatherPresenter;
-import cl.ceisufro.weathercompare.main.ListWeatherPresenterImpl;
-import cl.ceisufro.weathercompare.main.ListWeatherView;
-import cl.ceisufro.weathercompare.models.objrequisicion.PromedioObject;
-import cl.ceisufro.weathercompare.promedio.adapter.PromedioWeatherAdapter;
+import weathercompare.main.ListWeatherPresenter;
+import weathercompare.main.ListWeatherPresenterImpl;
+import weathercompare.main.ListWeatherView;
+import weathercompare.models.objrequisicion.PromedioObject;
+import weathercompare.promedio.adapter.PromedioWeatherAdapter;
 import io.realm.Realm;
 import io.realm.RealmResults;
 

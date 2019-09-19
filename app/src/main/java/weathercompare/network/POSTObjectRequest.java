@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.network;
+package weathercompare.network;
 
 import android.util.Log;
 
@@ -9,7 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-import cl.ceisufro.weathercompare.utils.Utils;
+import weathercompare.utils.Utils;
 
 
 public class POSTObjectRequest {

@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.models.objrequisicion;
+package weathercompare.models.objrequisicion;
 
 import io.realm.RealmObject;
 

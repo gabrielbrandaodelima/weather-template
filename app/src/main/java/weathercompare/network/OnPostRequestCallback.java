@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.network;
+package weathercompare.network;
 
 import javax.annotation.Nullable;
 

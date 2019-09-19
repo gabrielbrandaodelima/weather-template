@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.utils;
+package weathercompare.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

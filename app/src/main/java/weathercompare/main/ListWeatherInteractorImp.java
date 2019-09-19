@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.main;
+package weathercompare.main;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -8,7 +8,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
-import cl.ceisufro.weathercompare.utils.Utils;
+import weathercompare.utils.Utils;
 
 public class ListWeatherInteractorImp implements ListWeatherInteractor {
 

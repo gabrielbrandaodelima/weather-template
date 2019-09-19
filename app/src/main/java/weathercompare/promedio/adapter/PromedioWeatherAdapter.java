@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.promedio.adapter;
+package weathercompare.promedio.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +15,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.models.objrequisicion.PromedioObject;
+import weathercompare.models.objrequisicion.PromedioObject;
 
 public class PromedioWeatherAdapter extends RecyclerView.Adapter<PromedioWeatherAdapter.ViewHolder> {
 

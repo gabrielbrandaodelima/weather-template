@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.openweather;
+package weathercompare.openweather;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -6,7 +6,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-import cl.ceisufro.weathercompare.utils.Utils;
+import weathercompare.utils.Utils;
 
 public class OpenWeatherInteractorImp implements OpenWeatherInteractor {
 

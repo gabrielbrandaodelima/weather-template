@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.apixu;
+package weathercompare.apixu;
 
 import android.app.ProgressDialog;
 

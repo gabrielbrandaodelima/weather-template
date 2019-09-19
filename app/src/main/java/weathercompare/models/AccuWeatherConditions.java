@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.models;
+package weathercompare.models;
 
 import io.realm.RealmObject;
 

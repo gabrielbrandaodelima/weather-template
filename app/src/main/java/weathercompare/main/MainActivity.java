@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.main;
+package weathercompare.main;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -37,17 +37,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.accuweather.AccuWeatherFragment;
-import cl.ceisufro.weathercompare.apixu.APIXUWeatherFragment;
-import cl.ceisufro.weathercompare.darksky.DarkSkyWeatherFragment;
-import cl.ceisufro.weathercompare.models.AccuWeatherConditions;
-import cl.ceisufro.weathercompare.models.ApixuWeatherConditions;
-import cl.ceisufro.weathercompare.models.DarkSkyWeatherConditions;
-import cl.ceisufro.weathercompare.models.OpenWeatherConditions;
-import cl.ceisufro.weathercompare.models.YahooWeatherConditions;
-import cl.ceisufro.weathercompare.openweather.OpenWeatherFragment;
-import cl.ceisufro.weathercompare.promedio.PromedioWeatherFragment;
-import cl.ceisufro.weathercompare.yahoo.YahooWeatherFragment;
+import weathercompare.accuweather.AccuWeatherFragment;
+import weathercompare.apixu.APIXUWeatherFragment;
+import weathercompare.darksky.DarkSkyWeatherFragment;
+import weathercompare.models.AccuWeatherConditions;
+import weathercompare.models.ApixuWeatherConditions;
+import weathercompare.models.DarkSkyWeatherConditions;
+import weathercompare.models.OpenWeatherConditions;
+import weathercompare.models.YahooWeatherConditions;
+import weathercompare.openweather.OpenWeatherFragment;
+import weathercompare.promedio.PromedioWeatherFragment;
+import weathercompare.yahoo.YahooWeatherFragment;
 
 //import cl.ceisufro.weathercompare.network.YahooWeatherRequest;
 

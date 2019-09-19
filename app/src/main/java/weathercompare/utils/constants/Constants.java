@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.utils.constants;
+package weathercompare.utils.constants;
 
 public class Constants {
 

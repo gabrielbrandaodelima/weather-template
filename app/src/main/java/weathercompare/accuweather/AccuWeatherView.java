@@ -1,6 +1,6 @@
-package cl.ceisufro.weathercompare.accuweather;
+package weathercompare.accuweather;
 
-import cl.ceisufro.weathercompare.main.ListWeatherView;
+import weathercompare.main.ListWeatherView;
 
 public interface AccuWeatherView extends ListWeatherView {
     void showError(String error);

@@ -32,14 +32,14 @@
 //import javax.annotation.Nullable;
 //
 //import cl.ceisufro.weathercompare.R;
-//import cl.ceisufro.weathercompare.models.objrequisicion.AccuWeatherObject;
-//import cl.ceisufro.weathercompare.models.objrequisicion.ApixuWeatherObject;
-//import cl.ceisufro.weathercompare.models.objrequisicion.DarkSkyWeatherObject;
-//import cl.ceisufro.weathercompare.models.objrequisicion.OpenWeatherObject;
-//import cl.ceisufro.weathercompare.models.objrequisicion.YahooWeatherObject;
-//import cl.ceisufro.weathercompare.network.OnPostRequestCallback;
-//import cl.ceisufro.weathercompare.network.POSTObjectRequest;
-//import cl.ceisufro.weathercompare.utils.Utils;
+//import AccuWeatherObject;
+//import ApixuWeatherObject;
+//import DarkSkyWeatherObject;
+//import OpenWeatherObject;
+//import YahooWeatherObject;
+//import OnPostRequestCallback;
+//import POSTObjectRequest;
+//import Utils;
 //import io.reactivex.disposables.Disposable;
 //import retrofit.Callback;
 //import retrofit.RetrofitError;

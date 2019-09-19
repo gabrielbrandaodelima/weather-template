@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.yahoo;
+package weathercompare.yahoo;
 
 import android.app.ProgressDialog;
 

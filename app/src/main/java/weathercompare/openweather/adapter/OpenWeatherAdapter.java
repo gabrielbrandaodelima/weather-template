@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.openweather.adapter;
+package weathercompare.openweather.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +15,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.models.objrequisicion.OpenWeatherObject;
+import weathercompare.models.objrequisicion.OpenWeatherObject;
 
 public class OpenWeatherAdapter extends RecyclerView.Adapter<OpenWeatherAdapter.ViewHolder> {
 

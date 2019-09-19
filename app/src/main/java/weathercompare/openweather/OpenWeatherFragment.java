@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.openweather;
+package weathercompare.openweather;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -32,11 +32,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.main.ListWeatherPresenter;
-import cl.ceisufro.weathercompare.main.ListWeatherPresenterImpl;
-import cl.ceisufro.weathercompare.models.OpenWeatherConditions;
-import cl.ceisufro.weathercompare.models.objrequisicion.OpenWeatherObject;
-import cl.ceisufro.weathercompare.openweather.adapter.OpenWeatherAdapter;
+import weathercompare.main.ListWeatherPresenter;
+import weathercompare.main.ListWeatherPresenterImpl;
+import weathercompare.models.OpenWeatherConditions;
+import weathercompare.models.objrequisicion.OpenWeatherObject;
+import weathercompare.openweather.adapter.OpenWeatherAdapter;
 import io.realm.Realm;
 import io.realm.RealmResults;
 

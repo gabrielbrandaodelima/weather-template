@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare;
+package weathercompare;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.darksky;
+package weathercompare.darksky;
 
 import android.util.Log;
 

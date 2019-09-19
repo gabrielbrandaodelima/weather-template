@@ -1,8 +1,8 @@
-package cl.ceisufro.weathercompare.apixu;
+package weathercompare.apixu;
 
-import cl.ceisufro.weathercompare.main.ListWeatherView;
+import weathercompare.main.ListWeatherView;
 
-public interface ApixuWeatherView extends ListWeatherView{
+public interface ApixuWeatherView extends ListWeatherView {
     void showError(String error);
     void displayWeather();
 

@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.openweather;
+package weathercompare.openweather;
 
 import com.android.volley.RequestQueue;
 

@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.darksky;
+package weathercompare.darksky;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -33,11 +33,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.darksky.adapter.DarkSkyWeatherAdapter;
-import cl.ceisufro.weathercompare.main.ListWeatherPresenter;
-import cl.ceisufro.weathercompare.main.ListWeatherPresenterImpl;
-import cl.ceisufro.weathercompare.models.objrequisicion.DarkSkyWeatherObject;
-import cl.ceisufro.weathercompare.models.objrequisicion.WeatherObject;
+import weathercompare.darksky.adapter.DarkSkyWeatherAdapter;
+import weathercompare.main.ListWeatherPresenter;
+import weathercompare.main.ListWeatherPresenterImpl;
+import weathercompare.models.objrequisicion.DarkSkyWeatherObject;
+import weathercompare.models.objrequisicion.WeatherObject;
 import io.realm.Realm;
 import io.realm.RealmResults;
 

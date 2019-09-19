@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.yahoo;
+package weathercompare.yahoo;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -33,11 +33,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.main.ListWeatherPresenter;
-import cl.ceisufro.weathercompare.main.ListWeatherPresenterImpl;
-import cl.ceisufro.weathercompare.models.YahooWeatherConditions;
-import cl.ceisufro.weathercompare.models.objrequisicion.YahooWeatherObject;
-import cl.ceisufro.weathercompare.yahoo.adapter.YahooWeatherAdapter;
+import weathercompare.main.ListWeatherPresenter;
+import weathercompare.main.ListWeatherPresenterImpl;
+import weathercompare.models.YahooWeatherConditions;
+import weathercompare.models.objrequisicion.YahooWeatherObject;
+import weathercompare.yahoo.adapter.YahooWeatherAdapter;
 import io.realm.Realm;
 import io.realm.RealmResults;
 

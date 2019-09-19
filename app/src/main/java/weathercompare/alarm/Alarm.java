@@ -5,7 +5,7 @@
 //import android.content.Context;
 //import android.content.Intent;
 //
-//import cl.ceisufro.weathercompare.main.MainActivity;
+//import MainActivity;
 //
 //public class Alarm {
 //

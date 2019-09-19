@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.application;
+package weathercompare.application;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,7 +1,7 @@
-package cl.ceisufro.weathercompare.yahoo;
+package weathercompare.yahoo;
 
 
-import cl.ceisufro.weathercompare.main.ListWeatherView;
+import weathercompare.main.ListWeatherView;
 
 public interface YahooWeatherView extends ListWeatherView{
     void showError(String error);

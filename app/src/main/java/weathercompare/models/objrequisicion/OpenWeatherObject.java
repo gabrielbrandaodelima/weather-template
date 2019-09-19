@@ -1,6 +1,6 @@
-package cl.ceisufro.weathercompare.models.objrequisicion;
+package weathercompare.models.objrequisicion;
 
-import cl.ceisufro.weathercompare.utils.constants.Constants;
+import weathercompare.utils.constants.Constants;
 import io.realm.RealmObject;
 
 public class OpenWeatherObject extends RealmObject {

@@ -1,4 +1,4 @@
-package cl.ceisufro.weathercompare.darksky.adapter;
+package weathercompare.darksky.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +16,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ceisufro.weathercompare.R;
-import cl.ceisufro.weathercompare.models.objrequisicion.WeatherObject;
+import weathercompare.models.objrequisicion.WeatherObject;
 
 public class DarkSkyWeatherAdapter extends RecyclerView.Adapter<DarkSkyWeatherAdapter.ViewHolder> {
 

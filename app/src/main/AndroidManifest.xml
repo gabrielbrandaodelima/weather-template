@@ -17,13 +17,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".application.WeatherCompareApp"
+        android:name="weathercompare.application.WeatherCompareApp"
 
         android:theme="@style/AppTheme">
 
 
         <activity
-            android:name=".main.MainActivity"
+            android:name="weathercompare.main.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
